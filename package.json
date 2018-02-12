@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Action series for module items. Used in the D2L-to-Canvas Conversion tool.",
   "main": "template-module-items.js",
+  "dependencies": {
+    "async": "^2.6.0",
+    "canvas-wrapper": "git+https://github.com/byuitechops/Canvas-wrapper.git"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

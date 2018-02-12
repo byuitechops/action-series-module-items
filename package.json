@@ -1,0 +1,19 @@
+{
+  "name": "action-series-module-items",
+  "version": "1.0.0",
+  "description": "Action series for module items. Used in the D2L-to-Canvas Conversion tool.",
+  "main": "template-module-items.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/byuitechops/action-series-module-items.git"
+  },
+  "author": "Zachary Williams",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/byuitechops/action-series-module-items/issues"
+  },
+  "homepage": "https://github.com/byuitechops/action-series-module-items#readme"
+}

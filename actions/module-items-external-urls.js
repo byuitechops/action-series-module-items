@@ -10,7 +10,7 @@ module.exports = (course, moduleItem, callback) => {
     course.info.designWorkbookURL = 'https://www.google.com';
 
     /* Potential matches in LOWER case */
-    var itemsToReorder = [{
+    var urlsToChange = [{
         title: /University\s*Polic/gi,
         newUrl: 'https://content.byui.edu/integ/gen/d24f576f-d34b-47be-a466-d00bd4792fb6/0/universitypolicies.html'
     }, {
@@ -33,14 +33,14 @@ module.exports = (course, moduleItem, callback) => {
     /* If the item's title contains one of the keywords, then we need to change its position. 
      * If the find function doesn't find anything, we know there isn't a match. */
 
-    var item = itemsToReorder.find(item => item.title.test(moduleItem.title));
+    var item = urlsToChange.find(item => item.title.test(moduleItem.title));
 
     /* This is the action that happens if the test is passed */
     function action() {
         moduleItem.external_url = item.newUrl;
         moduleItem.new_tab = true;
 
-        course.log('Module Item External URLs Set', {
+        course.log('Module Items - External URLs Set', {
             'Title': moduleItem.title,
             'ID': moduleItem.id,
             'New URL': moduleItem.external_url

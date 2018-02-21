@@ -7,7 +7,7 @@ module.exports = (course, moduleItem, callback) => {
 
     /* Potential matches in LOWER case */
     var itemsToReorder = [{
-        itemKeyWord: 'lesson notes',
+        itemKeyWord: /lesson\s*\d*\s*notes/gi,
         position: 1
     }, {
         itemKeyWord: 'notes from instructor',
@@ -16,13 +16,13 @@ module.exports = (course, moduleItem, callback) => {
 
     /* If the item's title contains one of the keywords, then we need to change its position. 
      * If the find function doesn't find anything, we know there isn't a match. */
-    var item = itemsToReorder.find(item => moduleItem.title.toLowerCase().includes(item.itemKeyWord));
+    var item = itemsToReorder.find(item => item.itemKeyWord.test(moduleItem.title) && !moduleItem.title.toLowerCase().includes('general'));
 
     /* This is the action that happens if the test is passed */
     function action() {
         moduleItem.position = item.position;
 
-        course.log('Module Item Positions Set', {
+        course.log('Module Items - Position Set', {
             'Title': moduleItem.title,
             'ID': moduleItem.id,
             'Position': moduleItem.position

@@ -10,9 +10,6 @@ module.exports = (course, moduleItem, callback) => {
     var actionItems = [{
         reg: /(lesson|week)\s*\d*?\s*notes?/gi,
         setting: false
-    }, {
-        reg: /(lesson|week)\s*\d*?\s*notes?/gi,
-        setting: false
     }];
 
     /* The test returns TRUE or FALSE - action() is called if true */
@@ -22,7 +19,7 @@ module.exports = (course, moduleItem, callback) => {
     function action() {
         var oldSetting = moduleItem.published;
         moduleItem.published = found.setting;
-        course.log('Module Item Publish Settings', {
+        course.log('Module Items - Publish Settings', {
             'Title': moduleItem.title,
             'Before': oldSetting,
             'After': moduleItem.published,

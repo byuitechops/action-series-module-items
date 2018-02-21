@@ -8,6 +8,8 @@ module.exports = (course, moduleItem, callback) => {
         /copyright\s*permission/gi,
         /copyediting\s*style\s*sheet/gi,
         /discussion\sforums/gi,
+        /setup\s*notes\s*for\s*development\s*team/gi,
+        /-?setup\s*notes\s*&?\s*course\s*setting/gi,
     ];
 
     /* The test returns TRUE or FALSE - action() is called if true */
@@ -16,7 +18,7 @@ module.exports = (course, moduleItem, callback) => {
     /* This is the action that happens if the test is passed */
     function action() {
         moduleItem.techops.delete = true;
-        course.log('Module Items Deleted', {
+        course.log('Module Items - Deleted', {
             'Title': moduleItem.title,
             'ID': moduleItem.id
         });

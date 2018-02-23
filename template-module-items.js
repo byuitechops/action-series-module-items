@@ -11,7 +11,7 @@ var actions = [
 ];
 
 class TechOps {
-    constructor() {
+    constructor(parentModule) {
         this.getHTML = getHTML;
         this.setHTML = setHTML;
         this.getPosition = getPosition;
@@ -21,12 +21,14 @@ class TechOps {
         this.getID = getID;
         this.delete = false;
         this.type = 'Module Item';
+        this.parentModule = parentModule;
     }
 }
 
 /* Retrieve all items of the type */
 function getItems(course, callback) {
     var moduleItems = [];
+    var moduleList = [];
 
     /* Get the module items for a module */
     function getModuleItems(module, eachCallback) {
@@ -50,15 +52,21 @@ function getItems(course, callback) {
             return;
         }
 
+        moduleList = modules;
+
         /* For each module, get the module items */
         asyncLib.each(modules, getModuleItems, (err) => {
             if (err) {
                 course.error(err);
             }
 
+
             /* Give each item the helper class */
             moduleItems.forEach(item => {
-                item.techops = new TechOps();
+                var parentModule = moduleList.find(mod => {
+                    return mod.id = item.module_id;
+                });
+                item.techops = new TechOps(parentModule);
             });
 
             callback(null, moduleItems);

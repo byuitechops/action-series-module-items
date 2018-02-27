@@ -8,6 +8,7 @@ var actions = [
     require('./actions/module-items-external-urls.js'),
     require('./actions/module-items-delete.js'),
     require('./actions/module-items-publish.js'),
+    require('./actions/module-items-naming-conventions.js'),
 ];
 
 class TechOps {

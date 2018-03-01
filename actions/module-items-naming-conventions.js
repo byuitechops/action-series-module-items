@@ -14,10 +14,10 @@ module.exports = (course, item, callback) => {
     }];
 
     /* TRUE if the item is in a weekly module, FALSE otherwise */
-    var weeklyModule = /(Week|Lesson|L|W)\s*(1[0-4]|0?\d(\D|$))/gi.test(item.techops.parentModule.name);
+    var weeklyModule = /(Week|Lesson|L|W)\s*(1[0-4]|0?\d(\D|$))/gi.test(item.techops.module_id.name);
 
     console.log(`item title: ${item.title}`);
-    console.log(`module title: ${item.techops.parentModule.name}`);
+    console.log(`module title: ${item.techops.module_id.name}`);
     console.log(`weeklyModule: ${weeklyModule}`);
     /* The test returns TRUE or FALSE - action() is called if true */
     // var matchedSpecific = specificItems.find(modItem => modItem.name.test(item.title));
@@ -27,7 +27,7 @@ module.exports = (course, item, callback) => {
         var weekNum = '';
         var oldName = item.title;
         // var itemName = item.title;
-        var moduleName = item.techops.parentModule.name;
+        var moduleName = item.techops.module_id.name;
         /* Get each word in the title */
         var titleArray = moduleName.split(' ');
 

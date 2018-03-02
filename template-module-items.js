@@ -12,7 +12,7 @@ var actions = [
 ];
 
 class TechOps {
-    constructor(module_id) {
+    constructor(parentModule) {
         this.getHTML = getHTML;
         this.setHTML = setHTML;
         this.getPosition = getPosition;
@@ -22,7 +22,7 @@ class TechOps {
         this.getID = getID;
         this.delete = false;
         this.type = 'Module Item';
-        this.module_id = module_id;
+        this.parentModule = parentModule;
     }
 }
 
@@ -64,10 +64,10 @@ function getItems(course, callback) {
 
             /* Give each item the helper class */
             moduleItems.forEach(item => {
-                var module_id = moduleList.find(mod => {
-                    return mod.id = item.module_id;
+                var parentModule = moduleList.find(mod => {
+                    return mod.id === item.module_id;
                 });
-                item.techops = new TechOps(module_id);
+                item.techops = new TechOps(parentModule);
             });
 
             callback(null, moduleItems);

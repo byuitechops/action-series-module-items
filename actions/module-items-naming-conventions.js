@@ -7,54 +7,69 @@ module.exports = (course, item, callback) => {
     }
 
     /* items with specific naming conventions, in LOWER case */
-    var specificItems = [{
-        name: /lesson\s*notes/gi,   // W[##] Lesson Notes  (Do NOT Publish)
+    var specialItems = [{
+        name: /lesson\s*notes/gi, // W[##] Lesson Notes  (Do NOT Publish)
     }, {
-        name: /notes\s*from\s*instructor/gi,    // W[##] Notes from Instructor
+        name: /notes\s*from\s*instructor/gi, // W[##] Notes from Instructor
     }];
 
-    /* TRUE if the item is in a weekly module, FALSE otherwise */
-    var weeklyModule = /(Week|Lesson|L|W)\s*(1[0-4]|0?\d(\D|$))/gi.test(item.techops.module_id.name);
-
-    console.log(`item title: ${item.title}`);
-    console.log(`module title: ${item.techops.module_id.name}`);
-    console.log(`weeklyModule: ${weeklyModule}`);
-    /* The test returns TRUE or FALSE - action() is called if true */
-    // var matchedSpecific = specificItems.find(modItem => modItem.name.test(item.title));
+    /* TRUE if the item is in a weekly module, FALSE otherwise - action() is called if true*/
+    var weeklyModule = /(Week|Lesson|L|W)\s*(1[0-4]|0?\d(\D|$))/gi.test(item.techops.parentModule.name);
 
     /* This is the action that happens if the test is passed */
     function action() {
-        var weekNum = '';
-        var oldName = item.title;
-        // var itemName = item.title;
-        var moduleName = item.techops.module_id.name;
-        /* Get each word in the title */
-        var titleArray = moduleName.split(' ');
+        /* If it is a special item, rename it a special way */
+        if (specialItems.includes(item.name)) {
+            item.title = `W${weekNum} ${item.name}`;
+        } else {
+            var weekNum = '';
+            var oldName = item.title;
+            var moduleName = item.techops.parentModule.name;
+            /* Get each word in the module title and module item title */
+            var modTitleArray = moduleName.split(' ');
+            var itemTitleArray = item.title.split(' ');
 
-        /* Get the week number */
-        /* Add 0 to week number if not present */
-        titleArray.forEach((currWord, index) => {
-            if (/(L|W)(1[0-4]|0?\d)(\D|$)/gi.test(currWord)) {
-                var eachChar = moduleName.split('');
-                eachChar.forEach(theChar => {
-                    if (!isNaN(theChar) && theChar !== ' ') {
-                        weekNum += theChar;
-                    }
-                });
+            /* Get the week number from the module title*/
+            /* Add 0 to week number if not present */
+            modTitleArray.forEach((currWord, index) => {
+                /* If the current word follows this convention: L14, W01, L2, W9, etc*/
+                if (/(L|W)(1[0-4]|0?\d)(\D|$)/gi.test(currWord)) {
+                    /* Spit the current word into a character array */
+                    var eachChar = moduleName.split('');
+                    eachChar.forEach(theChar => {
+                        /* If the character is a number, append it to weekNum */
+                        if (!isNaN(theChar) && theChar !== ' ') {
+                            weekNum += theChar;
+                        }
+                    });
+                    /* If the current word is 'week' or 'lesson' */
+                } else if (/week|lesson/gi.test(currWord)) {
+                    /* Replace each non-digit in the title with nothing */
+                    /* index + 1 because the week number normally follows the word 'week' or 'lesson' */
+                    weekNum = modTitleArray[index + 1].replace(/\D+/g, '');
+                }
+                if (weekNum.length === 1) {
+                    /* Add 0 to the beginning of the number if single digit */
+                    weekNum = weekNum.replace(/^/, '0');
+                }
+            });
 
-            } else if (/week/gi.test(currWord) || /lesson/gi.test(currWord)) {
-                /* Replace each non-digit with nothing */
-                weekNum = titleArray[index + 1].replace(/\D+/g, '');
-            }
-            if (weekNum.length === 1) {
-                /* Add 0 to the beginning of the number if single digit */
-                weekNum = weekNum.replace(/^/, '0');
-            }
-        });
+            /* Check for already existing prefixes in the module item titles */
+            itemTitleArray.forEach((currWord, index) => {
+                if (/(L|W)(1[0-4]|0?\d)(\D|$)/gi.test(currWord)) {
+                    /* Get rid of L02, W14:, L3, W4 etc. */
+                    itemTitleArray.splice(index, 1);
 
-        item.title = `W${weekNum}: ${oldName}`;
-        
-        console.log('weekNum: ' + weekNum);
+                } else if (/week|lesson/gi.test(currWord)) {
+                    /* Get rid of the word 'week' or 'lesson' and the next word (hopefully a number) */
+                    itemTitleArray.splice(index, 2);
+                }
+            });
+
+            /* Make the title array into one string, each element being separated by a blank space */
+            modifiedTitle = itemTitleArray.join(' ');
+            item.title = `W${weekNum} ${item.type}: ${modifiedTitle}`;
+        }
         course.log(`${item.techops.type} - Naming Conventions`, {
             'Old Title': oldName,
             'New Title': item.title,
@@ -64,10 +79,9 @@ module.exports = (course, item, callback) => {
     }
 
     /* if the item is in a weekly module, call action() */
-    if (!weeklyModule) {
+    if (weeklyModule || specialItems.includes(item.name)) {
         action();
     } else {
         callback(null, course, item);
     }
-
 };

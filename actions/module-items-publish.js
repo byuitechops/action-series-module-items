@@ -6,7 +6,7 @@ module.exports = (course, moduleItem, callback) => {
         return;
     }
 
-    /* moduleItems to be renamed, in LOWER case */
+    /* moduleItems to be published, in LOWER case */
     var actionItems = [{
         reg: /(lesson|week)\s*\d*?\s*notes?/gi,
         setting: false

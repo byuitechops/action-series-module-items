@@ -8,6 +8,8 @@ var actions = [
     require('./actions/module-items-external-urls.js'),
     require('./actions/module-items-delete.js'),
     require('./actions/module-items-publish-settings.js'),
+    require('./actions/module-items-publish.js'),
+    require('./actions/module-items-naming-conventions.js'),
 ];
 
 class TechOps {
@@ -64,7 +66,7 @@ function getItems(course, callback) {
             /* Give each item the helper class */
             moduleItems.forEach(item => {
                 var parentModule = moduleList.find(mod => {
-                    return mod.id = item.module_id;
+                    return mod.id === item.module_id;
                 });
                 item.techops = new TechOps(parentModule);
             });
@@ -99,7 +101,7 @@ function deleteItem(course, module_item, callback) {
 
 /* PUT an item back into Canvas with updates */
 function putItem(course, module_item, callback) {
-    if (module_item.techops.delete == true) {
+    if (module_item.techops.delete === true) {
         deleteItem(course, module_item, callback);
         return;
     }

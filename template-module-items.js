@@ -36,7 +36,6 @@ function getItems(course, callback) {
         canvas.getModuleItems(course.info.canvasOU, module.id, (eachErr, items) => {
             if (eachErr) {
                 course.error(eachErr);
-                console.log('hello');
                 eachCallback(null);
                 return;
             }
@@ -61,8 +60,7 @@ function getItems(course, callback) {
                 course.error(err);
             }
 
-
-            /* Give each item the helper class */
+            /* Give each item the TechOps helper class */
             moduleItems.forEach(item => {
                 var parentModule = moduleList.find(mod => {
                     return mod.id === item.module_id;

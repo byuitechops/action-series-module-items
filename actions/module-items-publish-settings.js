@@ -19,7 +19,7 @@ module.exports = (course, moduleItem, callback) => {
     function action() {
         var oldSetting = moduleItem.published;
         moduleItem.published = found.setting;
-        course.log('Module Items - Publish Settings', {
+        moduleItem.techops.log('Module Item - Publish Settings', {
             'Title': moduleItem.title,
             'Before': oldSetting,
             'After': moduleItem.published,

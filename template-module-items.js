@@ -20,9 +20,14 @@ class TechOps {
         this.getTitle = getTitle;
         this.setTitle = setTitle;
         this.getID = getID;
+        this.logs = [];
         this.delete = false;
         this.type = 'Module Item';
         this.parentModule = parentModule;
+    }
+
+    log(title, details) {
+        this.logs.push({ title, details });
     }
 }
 
@@ -86,28 +91,38 @@ function buildPutObj(item) {
     };
 }
 
-function deleteItem(course, module_item, callback) {
-    canvas.delete(`/api/v1/courses/${course.info.canvasOU}/modules/${module_item.module_id}/items/${module_item.id}`, (err) => {
+function confirmLogs(course, moduleItem) {
+    moduleItem.techops.logs.forEach(log => {
+        console.log('potato');
+        course.log(log.title, log.details);
+    });
+}
+
+function deleteItem(course, moduleItem, callback) {
+    canvas.delete(`/api/v1/courses/${course.info.canvasOU}/modules/${moduleItem.module_id}/items/${moduleItem.id}`, (err) => {
         if (err) {
             callback(err);
             return;
         }
+        confirmLogs(course, moduleItem);
         callback(null, null);
     });
 }
 
 /* PUT an item back into Canvas with updates */
-function putItem(course, module_item, callback) {
-    if (module_item.techops.delete === true) {
-        deleteItem(course, module_item, callback);
+function putItem(course, moduleItem, callback) {
+    if (moduleItem.techops.delete === true) {
+        deleteItem(course, moduleItem, callback);
         return;
     }
-    var putObj = buildPutObj(module_item);
-    canvas.put(`/api/v1/courses/${course.info.canvasOU}/modules/${module_item.module_id}/items/${module_item.id}`, putObj, (err, newItem) => {
+    if (moduleItem.techops.logs === []) return;
+    var putObj = buildPutObj(moduleItem);
+    canvas.put(`/api/v1/courses/${course.info.canvasOU}/modules/${moduleItem.module_id}/items/${moduleItem.id}`, putObj, (err, newItem) => {
         if (err) {
             callback(err);
             return;
         }
+        confirmLogs(course, moduleItem);
         callback(null, newItem);
     });
 }

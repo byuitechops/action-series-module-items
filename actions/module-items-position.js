@@ -21,13 +21,11 @@ module.exports = (course, moduleItem, callback) => {
     /* This is the action that happens if the test is passed */
     function action() {
         moduleItem.position = item.position;
-
-        course.log('Module Items - Position Set', {
+        moduleItem.techops.log('Module Item - Position Changed', {
             'Title': moduleItem.title,
             'ID': moduleItem.id,
             'Position': moduleItem.position
         });
-
         callback(null, course, moduleItem);
     }
 

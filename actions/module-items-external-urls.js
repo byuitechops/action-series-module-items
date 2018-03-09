@@ -40,7 +40,7 @@ module.exports = (course, moduleItem, callback) => {
         moduleItem.external_url = item.newUrl;
         moduleItem.new_tab = true;
 
-        course.log('Module Items - External URLs Set', {
+        moduleItem.techops.log('Module Items - External URLs Set', {
             'Title': moduleItem.title,
             'ID': moduleItem.id,
             'New URL': moduleItem.external_url

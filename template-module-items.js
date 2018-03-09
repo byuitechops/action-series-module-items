@@ -93,7 +93,6 @@ function buildPutObj(item) {
 
 function confirmLogs(course, moduleItem) {
     moduleItem.techops.logs.forEach(log => {
-        console.log('potato');
         course.log(log.title, log.details);
     });
 }
@@ -115,7 +114,6 @@ function putItem(course, moduleItem, callback) {
         deleteItem(course, moduleItem, callback);
         return;
     }
-    if (moduleItem.techops.logs === []) return;
     var putObj = buildPutObj(moduleItem);
     canvas.put(`/api/v1/courses/${course.info.canvasOU}/modules/${moduleItem.module_id}/items/${moduleItem.id}`, putObj, (err, newItem) => {
         if (err) {

@@ -68,21 +68,28 @@ module.exports = (course, item, callback) => {
      * This is the function that happens if the test is passed 
      *********************************************************/
     function modifyModuleItemTitle() {
+        var logCategory = `${item.techops.type} - Naming Conventions Added`;
         var weekNum = getWeekNum();
         var modifiedTitle = checkForPrefix();
-        var oldName = item.title;
+        var oldTitle = item.title;
+        var newTitle = `W${weekNum} ${item.type}: ${modifiedTitle}`;
 
         /* If the item title matches one of the items in the specialItems array, then name it differently */
         if (found) {
-            item.title = `W${weekNum} ${item.title}`;
-        } else {
-            item.title = `W${weekNum} ${item.type}: ${modifiedTitle}`;
+            newTitle = `W${weekNum} ${item.title}`;
         }
 
-        item.techops.log(`${item.techops.type} - Naming Conventions`, {
-            'Old Title': oldName,
-            'New Title': item.title,
-            'ID': item.id
+        /* If we're running a standards check and not doing any changes... */
+        if (course.info.checkStandard === true) {
+            logCategory = `${item.techops.type} - Add Naming Conventions`;
+        } else {
+            item.title = newTitle;
+        }
+
+        item.techops.log(logCategory, {
+            'Old Title': oldTitle,
+            'New Title': newTitle,
+            'ID': item.id,
         });
 
         callback(null, course, item);

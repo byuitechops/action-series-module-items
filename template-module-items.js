@@ -29,6 +29,18 @@ class TechOps {
     log(title, details) {
         this.logs.push({ title, details });
     }
+
+    message(message) {
+        this.logs.push({ title: 'message', details: { message: message }});
+    }
+
+    warning(warning) {
+        this.logs.push({ title: 'warning', details: { warning: warning }});
+    }
+
+    error(error) {
+        this.logs.push({ error: error });
+    }
 }
 
 /* Retrieve all items of the type */

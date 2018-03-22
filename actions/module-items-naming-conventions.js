@@ -6,6 +6,14 @@ module.exports = (course, item, callback) => {
      ************************************************************************************/
     function getWeekNum() {
         var weekNum = '';
+        
+        /* If the parent module doesn't have a name, or if the module 
+        item is not housed in a module at all, return an empty string */
+        if (!item.techops.parentModule.name) {
+            return weekNum;
+        }
+
+        /* Get the parent module name */
         var moduleName = item.techops.parentModule.name;
         /* Get each word in the module title */
         var modTitleArray = moduleName.split(' ');
@@ -25,7 +33,7 @@ module.exports = (course, item, callback) => {
                 });
 
                 /* If the current word is 'week' or 'lesson' */
-            } else if (/week|lesson/gi.test(currWord)) {
+            } else if (/week|lesson/gi.test(currWord) && typeof modTitleArray[index + 1] !== 'undefined') {
                 /* Replace each non-digit in the title with nothing */
                 /* index + 1 because the week number normally follows the word 'week' or 'lesson' */
                 weekNum = modTitleArray[index + 1].replace(/\D+/g, '');
@@ -54,7 +62,7 @@ module.exports = (course, item, callback) => {
             /* Get rid of L02, W14:, L3, W4 etc. */
             if (/(L|W)(1[0-4]|0?\d)(\D|$)/gi.test(currWord)) {
                 itemTitleArray.splice(index, 1);
-            } else if (/week|lesson/gi.test(currWord)) {
+            } else if (/week|lesson/gi.test(currWord) && typeof itemTitleArray[index + 1] !== 'undefined') {
                 /* Get rid of the word 'week' or 'lesson' and the next word (hopefully a number) */
                 itemTitleArray.splice(index, 2);
             }
@@ -68,7 +76,6 @@ module.exports = (course, item, callback) => {
      * This is the function that happens if the test is passed 
      *********************************************************/
     function modifyModuleItemTitle() {
-        var logCategory = `${item.techops.type} - Naming Conventions Added`;
         var weekNum = getWeekNum();
         var modifiedTitle = checkForPrefix();
         var oldTitle = item.title;
@@ -79,14 +86,10 @@ module.exports = (course, item, callback) => {
             newTitle = `W${weekNum} ${item.title}`;
         }
 
-        /* If we're running a standards check and not doing any changes... */
-        if (course.info.checkStandard === true) {
-            logCategory = `${item.techops.type} - Add Naming Conventions`;
-        } else {
-            item.title = newTitle;
-        }
+        /* Set the new title for the PUT object */
+        item.title = newTitle;
 
-        item.techops.log(logCategory, {
+        item.techops.log(`${item.techops.type} - Naming Conventions Added`, {
             'Old Title': oldTitle,
             'New Title': newTitle,
             'ID': item.id,

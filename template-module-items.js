@@ -20,9 +20,26 @@ class TechOps {
         this.getTitle = getTitle;
         this.setTitle = setTitle;
         this.getID = getID;
+        this.logs = [];
         this.delete = false;
         this.type = 'Module Item';
         this.parentModule = parentModule;
+    }
+
+    log(title, details) {
+        this.logs.push({ title, details });
+    }
+
+    message(message) {
+        this.logs.push({ title: 'message', details: { message: message }});
+    }
+
+    warning(warning) {
+        this.logs.push({ title: 'warning', details: { warning: warning }});
+    }
+
+    error(error) {
+        this.logs.push({ error: error });
     }
 }
 
@@ -36,7 +53,6 @@ function getItems(course, callback) {
         canvas.getModuleItems(course.info.canvasOU, module.id, (eachErr, items) => {
             if (eachErr) {
                 course.error(eachErr);
-                console.log('hello');
                 eachCallback(null);
                 return;
             }
@@ -61,8 +77,7 @@ function getItems(course, callback) {
                 course.error(err);
             }
 
-
-            /* Give each item the helper class */
+            /* Give each item the TechOps helper class */
             moduleItems.forEach(item => {
                 var parentModule = moduleList.find(mod => {
                     return mod.id === item.module_id;
@@ -88,8 +103,8 @@ function buildPutObj(item) {
     };
 }
 
-function deleteItem(course, module_item, callback) {
-    canvas.delete(`/api/v1/courses/${course.info.canvasOU}/modules/${module_item.module_id}/items/${module_item.id}`, (err) => {
+function deleteItem(course, moduleItem, callback) {
+    canvas.delete(`/api/v1/courses/${course.info.canvasOU}/modules/${moduleItem.module_id}/items/${moduleItem.id}`, (err) => {
         if (err) {
             callback(err);
             return;
@@ -99,13 +114,13 @@ function deleteItem(course, module_item, callback) {
 }
 
 /* PUT an item back into Canvas with updates */
-function putItem(course, module_item, callback) {
-    if (module_item.techops.delete === true) {
-        deleteItem(course, module_item, callback);
+function putItem(course, moduleItem, callback) {
+    if (moduleItem.techops.delete === true) {
+        deleteItem(course, moduleItem, callback);
         return;
     }
-    var putObj = buildPutObj(module_item);
-    canvas.put(`/api/v1/courses/${course.info.canvasOU}/modules/${module_item.module_id}/items/${module_item.id}`, putObj, (err, newItem) => {
+    var putObj = buildPutObj(moduleItem);
+    canvas.put(`/api/v1/courses/${course.info.canvasOU}/modules/${moduleItem.module_id}/items/${moduleItem.id}`, putObj, (err, newItem) => {
         if (err) {
             callback(err);
             return;

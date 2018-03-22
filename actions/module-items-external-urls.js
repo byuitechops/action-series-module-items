@@ -6,9 +6,6 @@ module.exports = (course, moduleItem, callback) => {
         return;
     }
 
-    // TESTING UNTIL OPTION IS ADDED
-    course.info.designWorkbookURL = 'https://www.google.com';
-
     /* Potential matches in LOWER case */
     var urlsToChange = [{
         title: /University\s*Polic/gi,
@@ -37,13 +34,20 @@ module.exports = (course, moduleItem, callback) => {
 
     /* This is the action that happens if the test is passed */
     function action() {
-        moduleItem.external_url = item.newUrl;
-        moduleItem.new_tab = true;
+        var logCategory = 'Module Item - External URLs Set';
 
-        course.log('Module Items - External URLs Set', {
+        /* If we're running a standards check and not doing any changes... */
+        if (course.info.checkStandard === true) {
+            logCategory = 'Module Item - External URLs to Set';
+        } else {
+            moduleItem.external_url = item.newUrl;
+            moduleItem.new_tab = true;
+        }
+
+        moduleItem.techops.log(logCategory, {
             'Title': moduleItem.title,
             'ID': moduleItem.id,
-            'New URL': moduleItem.external_url
+            'New URL': item.newUrl,
         });
 
         callback(null, course, moduleItem);
@@ -55,5 +59,4 @@ module.exports = (course, moduleItem, callback) => {
     } else {
         callback(null, course, moduleItem);
     }
-
 };

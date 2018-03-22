@@ -42,7 +42,7 @@ module.exports = (course, item, callback) => {
 
     /*******************************************************************
      * Check for already existing prefixes in each module item's title.
-     * If one exists, delete it before creating a new one in action().
+     * If one exists, delete it before creating a new one in modifyModuleItemTitle().
      * Ex: L1, W02, Lesson 03, Week 4 
      *******************************************************************/
     function checkForPrefix() {
@@ -65,24 +65,31 @@ module.exports = (course, item, callback) => {
     }
 
     /*********************************************************
-     * This is the action() that happens if the test is passed 
+     * This is the function that happens if the test is passed 
      *********************************************************/
-    function action() {
+    function modifyModuleItemTitle() {
+        var logCategory = `${item.techops.type} - Naming Conventions Added`;
         var weekNum = getWeekNum();
         var modifiedTitle = checkForPrefix();
-        var oldName = item.title;
+        var oldTitle = item.title;
+        var newTitle = `W${weekNum} ${item.type}: ${modifiedTitle}`;
 
         /* If the item title matches one of the items in the specialItems array, then name it differently */
         if (found) {
-            item.title = `W${weekNum} ${item.title}`;
-        } else {
-            item.title = `W${weekNum} ${item.type}: ${modifiedTitle}`;
+            newTitle = `W${weekNum} ${item.title}`;
         }
 
-        course.log(`${item.techops.type} - Naming Conventions`, {
-            'Old Title': oldName,
-            'New Title': item.title,
-            'ID': item.id
+        /* If we're running a standards check and not doing any changes... */
+        if (course.info.checkStandard === true) {
+            logCategory = `${item.techops.type} - Add Naming Conventions`;
+        } else {
+            item.title = newTitle;
+        }
+
+        item.techops.log(logCategory, {
+            'Old Title': oldTitle,
+            'New Title': newTitle,
+            'ID': item.id,
         });
 
         callback(null, course, item);
@@ -103,15 +110,15 @@ module.exports = (course, item, callback) => {
         /notes\s*from\s*instructor/gi, // W[##] Notes from Instructor
     ];
 
-    /* TRUE if the item is in a weekly module, FALSE otherwise - action() is called if true*/
+    /* TRUE if the item is in a weekly module, FALSE otherwise - modifyModuleItemTitle() is called if true*/
     var weeklyModule = /(Week|Lesson|L|W)\s*(1[0-4]|0?\d(\D|$))/gi.test(item.techops.parentModule.name);
 
     /* If the item title matches one of the items in the specialItems array, then it has a special naming convention */
     var found = specialItems.find(special => special.test(item.title));
 
-    /* if the item is in a weekly module, call action() */
+    /* if the item is in a weekly module, call modifyModuleItemTitle() */
     if (weeklyModule) {
-        action();
+        modifyModuleItemTitle();
     } else {
         callback(null, course, item);
     }

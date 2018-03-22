@@ -10,7 +10,8 @@ module.exports = (course, moduleItem, callback) => {
         /discussion\sforums/gi,
         /setup\s*notes\s*for\s*development\s*team/gi,
         /-?setup\s*notes\s*&?\s*course\s*setting/gi,
-        /how\s*to\s*understand\s*due\s*date/gi,
+        /how\s*to\s*understand\s*due\s*date(s)*/gi,
+        /^schedule$/gi,
     ];
 
     /* The test returns TRUE or FALSE - action() is called if true */
@@ -18,8 +19,16 @@ module.exports = (course, moduleItem, callback) => {
 
     /* This is the action that happens if the test is passed */
     function action() {
-        moduleItem.techops.delete = true;
-        course.log('Module Items - Deleted', {
+        var logCategory = 'Module Item - Deleted';
+
+        /* If we're running a standards check and not doing any changes... */
+        if (course.info.checkStandard === true) {
+            logCategory = 'Module Item - Deprecated';
+        } else {
+            moduleItem.techops.delete = true;
+        }
+      
+        moduleItem.techops.log(logCategory, {
             'Title': moduleItem.title,
             'ID': moduleItem.id
         });

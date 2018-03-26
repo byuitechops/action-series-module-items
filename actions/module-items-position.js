@@ -7,7 +7,7 @@ module.exports = (course, moduleItem, callback) => {
 
     /* Potential matches in LOWER case */
     var itemsToReorder = [{
-        itemKeyWord: /lesson\s*\d*\s*notes/i,
+        itemKeyWord: /\d*\s*lesson\s*\d*\s*notes/i,
         position: 1
     }, {
         itemKeyWord: /notes\s*from\s*instructor/i,

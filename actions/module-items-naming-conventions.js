@@ -6,10 +6,10 @@ module.exports = (course, item, callback) => {
      ************************************************************************************/
     function getWeekNum() {
         var weekNum = '';
-        
+
         /* If the parent module doesn't have a name, or if the module 
         item is not housed in a module at all, return an empty string */
-        if (!item.techops.parentModule.name) {
+        if (typeof item.techops.parentModule.name === 'undefined') {
             return weekNum;
         }
 
@@ -24,7 +24,7 @@ module.exports = (course, item, callback) => {
             /* If the current word follows this convention: L14, W01, L2, W9, etc */
             if (/(L|W)(1[0-4]|0?\d)(\D|$)/gi.test(currWord)) {
                 /* Spit the current word into a character array */
-                var eachChar = moduleName.split('');
+                var eachChar = currWord.split('');
                 eachChar.forEach(theChar => {
                     /* If the character is a number, append it to weekNum */
                     if (!isNaN(theChar) && theChar !== ' ') {
@@ -55,16 +55,17 @@ module.exports = (course, item, callback) => {
      *******************************************************************/
     function checkForPrefix() {
         /* Get each word in the module item title */
-        var itemTitleArray = item.title.split(' ');
-
+        if (typeof item.title !== 'undefined') {
+            var itemTitleArray = item.title.split(' ');
+        } else {
+            var itemTitleArray = '';
+        }
+     
         /* Check for already existing prefixes in the module item titles */
         itemTitleArray.forEach((currWord, index) => {
             /* Get rid of L02, W14:, L3, W4 etc. */
             if (/(L|W)(1[0-4]|0?\d)(\D|$)/gi.test(currWord)) {
                 itemTitleArray.splice(index, 1);
-            } else if (/week|lesson/gi.test(currWord) && typeof itemTitleArray[index + 1] !== 'undefined') {
-                /* Get rid of the word 'week' or 'lesson' and the next word (hopefully a number) */
-                itemTitleArray.splice(index, 2);
             }
         });
 
@@ -83,7 +84,7 @@ module.exports = (course, item, callback) => {
 
         /* If the item title matches one of the items in the specialItems array, then name it differently */
         if (found) {
-            newTitle = `W${weekNum} ${item.title}`;
+            newTitle = `W${weekNum} ${modifiedTitle}`;
         }
 
         /* Set the new title for the PUT object */
@@ -114,13 +115,17 @@ module.exports = (course, item, callback) => {
     ];
 
     /* TRUE if the item is in a weekly module, FALSE otherwise - modifyModuleItemTitle() is called if true*/
-    var weeklyModule = /(Week|Lesson|L|W)\s*(1[0-4]|0?\d(\D|$))/gi.test(item.techops.parentModule.name);
+    if (typeof item.techops.parentModule.name !== 'undefined') {
+        var weeklyModule = /(Week|Lesson|L|W)\s*(\d*(\D|$))/gi.test(item.techops.parentModule.name);
+    } else {
+        var weeklyModule = false;
+    }
 
     /* If the item title matches one of the items in the specialItems array, then it has a special naming convention */
     var found = specialItems.find(special => special.test(item.title));
 
     /* if the item is in a weekly module, call modifyModuleItemTitle() */
-    if (weeklyModule) {
+    if (weeklyModule && item.type !== 'SubHeader') {
         modifyModuleItemTitle();
     } else {
         callback(null, course, item);

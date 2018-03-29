@@ -22,7 +22,7 @@ module.exports = (course, item, callback) => {
         /* Add 0 to week number if not present */
         modTitleArray.forEach((currWord, index) => {
             /* If the current word follows this convention: L14, W01, L2, W9, etc */
-            if (/(L|W)(1[0-4]|0?\d)(\D|$)/gi.test(currWord)) {
+            if (/(L|W)(0?\d?\d)(\D|$)/gi.test(currWord)) {
                 /* Spit the current word into a character array */
                 var eachChar = currWord.split('');
                 eachChar.forEach(theChar => {
@@ -64,7 +64,7 @@ module.exports = (course, item, callback) => {
         /* Check for already existing prefixes in the module item titles */
         itemTitleArray.forEach((currWord, index) => {
             /* Get rid of L02, W14:, L3, W4 etc. */
-            if (/(L|W)(1[0-4]|0?\d)(\D|$)/gi.test(currWord)) {
+            if (/(L|W)(0?\d?\d)(\D|$)/gi.test(currWord)) {
                 itemTitleArray.splice(index, 1);
             }
         });
@@ -80,7 +80,14 @@ module.exports = (course, item, callback) => {
         var weekNum = getWeekNum();
         var modifiedTitle = checkForPrefix();
         var oldTitle = item.title;
-        var newTitle = `W${weekNum} ${item.type}: ${modifiedTitle}`;
+        var newTitle = '';
+
+        /* If the activity type is Quiz or Discussion, put it in the title. Else, put '_ActivityType_' */
+        if (item.type === 'Quiz' || item.type === 'Discussion') {
+            newTitle = `W${weekNum} ${item.type}: ${modifiedTitle}`;
+        } else {
+            newTitle = `W${weekNum} _ActivityType_: ${modifiedTitle}`;
+        }
 
         /* If the item title matches one of the items in the specialItems array, then name it differently */
         if (found) {

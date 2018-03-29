@@ -10,6 +10,7 @@ module.exports = (course, moduleItem, callback) => {
         /discussion\sforums/gi,
         /how\s*to\s*understand\s*due\s*date(s)*/gi,
         /^schedule$/gi,
+        /course\s*schedule\d*\D*archived/gi,
     ];
 
     /* The test returns TRUE or FALSE - action() is called if true */

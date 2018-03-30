@@ -9,7 +9,7 @@ module.exports = (course, item, callback) => {
 
         /* If the parent module doesn't have a name, or if the module 
         item is not housed in a module at all, return an empty string */
-        if (typeof item.techops.parentModule.name === 'undefined') {
+        if (typeof item.techops.parentModule === 'undefined') {
             return weekNum;
         }
 
@@ -60,7 +60,12 @@ module.exports = (course, item, callback) => {
         } else {
             var itemTitleArray = '';
         }
-     
+
+        /* If the title is only one word or less, don't modify it */
+        if (itemTitleArray.length <= 1) {
+            return item.title;
+        }
+
         /* Check for already existing prefixes in the module item titles */
         itemTitleArray.forEach((currWord, index) => {
             /* Get rid of L02, W14:, L3, W4 etc. */

@@ -88,11 +88,11 @@ module.exports = (course, item, callback) => {
         var newTitle = '';
 
         /* If the activity type is Quiz or Discussion, put it in the title. Else, put '_ActivityType_' */
-        if (item.type === 'Quiz' || item.type === 'Discussion') {
-            newTitle = `W${weekNum} ${item.type}: ${modifiedTitle}`;
-        } else {
+        // if (item.type === 'Quiz' || item.type === 'Discussion') {
+        //     newTitle = `W${weekNum} ${item.type}: ${modifiedTitle}`;
+        // } else {
             newTitle = `W${weekNum} _ActivityType_: ${modifiedTitle}`;
-        }
+        // }
 
         /* If the item title matches one of the items in the specialItems array, then name it differently */
         if (found) {

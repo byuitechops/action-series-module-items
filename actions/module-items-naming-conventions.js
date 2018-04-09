@@ -91,7 +91,7 @@ module.exports = (course, item, callback) => {
         // if (item.type === 'Quiz' || item.type === 'Discussion') {
         //     newTitle = `W${weekNum} ${item.type}: ${modifiedTitle}`;
         // } else {
-            newTitle = `W${weekNum} _ActivityType_: ${modifiedTitle}`;
+        newTitle = `W${weekNum} _ActivityType_: ${modifiedTitle}`;
         // }
 
         /* If the item title matches one of the items in the specialItems array, then name it differently */
@@ -114,9 +114,13 @@ module.exports = (course, item, callback) => {
     /**************************************************************
      *                      Start Here                            * 
      **************************************************************/
-    /* If the item is marked for deletion, or if it already matches the naming convention, do nothing */
-    if (item.techops.delete === true) {
-        callback(null, course, item);
+    //only add the platforms your grandchild should run in
+    var validPlatforms = ['online', 'pathway', 'campus'];
+    var validPlatform = validPlatforms.includes(course.settings.platform);
+
+    /* If the item is marked for deletion or isn't a valid platform type, do nothing */
+    if (moduleItem.techops.delete === true || validPlatform !== true) {
+        callback(null, course, moduleItem);
         return;
     }
 

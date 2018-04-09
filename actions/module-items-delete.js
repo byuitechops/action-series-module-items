@@ -10,25 +10,31 @@ module.exports = (course, moduleItem, callback) => {
     }
 
     /* Pages to be deleted, in LOWER case */
-    var doomedItems = [
-        /guidelines\s*for\s*button/gi,
-        /course\s*search\s*tool/gi,
-        /course\s*maintenance\s*request/gi,
-        /copyright\s*permission/gi,
-        /copyediting\s*style\s*sheet/gi,
-        /discussion\sforums/gi,
-        /how\s*to\s*understand\s*due\s*date(s)*/gi,
-        /^schedule$/gi,
-        /course\s*schedule\d*\D*archived/gi,
-        /^about\s*content$/gi,
-        /^about\s*discussions$/gi,
-        /^discussion\s*forums$/gi,
-        /^about\s*assignments$/gi,
-        /^about\s*quiz(zes)?$/gi,
-        /^about\s*grades?$/gi,
-        /^about\s*user\s*progress?$/gi,
-        /^conclusion?$/gi,
-    ];
+    var doomedItems;
+    if (course.settings.platform === 'campus') {
+        doomedItems = [
+            /^about\s*content$/gi,
+            /^about\s*discussions$/gi,
+            /^discussion\s*forums$/gi,
+            /^about\s*assignments$/gi,
+            /^about\s*quiz(zes)?$/gi,
+            /^about\s*grades?$/gi,
+            /^about\s*user\s*progress?$/gi,
+            /^conclusion?$/gi,
+        ];
+    } else {
+        doomedItems = [
+            /guidelines\s*for\s*button/gi,
+            /course\s*search\s*tool/gi,
+            /course\s*maintenance\s*request/gi,
+            /copyright\s*permission/gi,
+            /copyediting\s*style\s*sheet/gi,
+            /discussion\sforums/gi,
+            /how\s*to\s*understand\s*due\s*date(s)*/gi,
+            /^schedule$/gi,
+            /course\s*schedule\d*\D*archived/gi,
+        ];
+    }
 
     /* The test returns TRUE or FALSE - action() is called if true */
     var found = doomedItems.find(item => item.test(moduleItem.title));

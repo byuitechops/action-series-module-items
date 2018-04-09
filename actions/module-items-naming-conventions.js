@@ -55,10 +55,11 @@ module.exports = (course, item, callback) => {
      *******************************************************************/
     function checkForPrefix() {
         /* Get each word in the module item title */
+        var itemTitleArray;
         if (typeof item.title !== 'undefined') {
-            var itemTitleArray = item.title.split(' ');
+            itemTitleArray = item.title.split(' ');
         } else {
-            var itemTitleArray = '';
+            itemTitleArray = '';
         }
 
         /* If the title is only one word or less, don't modify it */
@@ -115,12 +116,12 @@ module.exports = (course, item, callback) => {
      *                      Start Here                            * 
      **************************************************************/
     //only add the platforms your grandchild should run in
-    var validPlatforms = ['online', 'pathway', 'campus'];
+    var validPlatforms = ['online', 'pathway'];
     var validPlatform = validPlatforms.includes(course.settings.platform);
 
     /* If the item is marked for deletion or isn't a valid platform type, do nothing */
-    if (moduleItem.techops.delete === true || validPlatform !== true) {
-        callback(null, course, moduleItem);
+    if (item.techops.delete === true || validPlatform !== true) {
+        callback(null, course, item);
         return;
     }
 
@@ -131,10 +132,11 @@ module.exports = (course, item, callback) => {
     ];
 
     /* TRUE if the item is in a weekly module, FALSE otherwise - modifyModuleItemTitle() is called if true*/
+    var weeklyModule;
     if (typeof item.techops.parentModule.name !== 'undefined') {
-        var weeklyModule = /(Week|Lesson|L|W)\s*(\d*(\D|$))/gi.test(item.techops.parentModule.name);
+        weeklyModule = /(Week|Lesson|L|W)\s*(\d*(\D|$))/gi.test(item.techops.parentModule.name);
     } else {
-        var weeklyModule = false;
+        weeklyModule = false;
     }
 
     /* If the item title matches one of the items in the specialItems array, then it has a special naming convention */

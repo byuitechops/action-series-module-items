@@ -20,6 +20,14 @@ module.exports = (course, moduleItem, callback) => {
         /how\s*to\s*understand\s*due\s*date(s)*/gi,
         /^schedule$/gi,
         /course\s*schedule\d*\D*archived/gi,
+        /^about\s*content$/gi,
+        /^about\s*discussions$/gi,
+        /^discussion\s*forums$/gi,
+        /^about\s*assignments$/gi,
+        /^about\s*quiz(zes)?$/gi,
+        /^about\s*grades?$/gi,
+        /^about\s*user\s*progress?$/gi,
+        /^conclusion?$/gi,
     ];
 
     /* The test returns TRUE or FALSE - action() is called if true */

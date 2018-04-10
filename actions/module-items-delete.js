@@ -23,6 +23,8 @@ module.exports = (course, moduleItem, callback) => {
             /^conclusion?$/gi,
             /course\s*maintenance\s*log/gi,
             /course\s*search\s*tool/gi,
+            /weekly\s*patterns?\s*(and|&)\s*expectations?\s*/gi,
+            /course\s*outline/gi,
         ];
     } else {
         doomedItems = [
@@ -36,6 +38,8 @@ module.exports = (course, moduleItem, callback) => {
             /course\s*schedule\d*\D*archived/gi,
             /course\s*maintenance\s*log/gi,
             /course\s*search\s*tool/gi,
+            /weekly\s*patterns?\s*(and|&)\s*expectations?\s*/gi,
+            /course\s*outline/gi,
         ];
     }
 

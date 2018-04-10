@@ -21,11 +21,12 @@ module.exports = (course, moduleItem, callback) => {
             /^about\s*grades?$/gi,
             /^about\s*user\s*progress?$/gi,
             /^conclusion?$/gi,
+            /course\s*maintenance\s*log/gi,
+            /course\s*search\s*tool/gi,
         ];
     } else {
         doomedItems = [
             /guidelines\s*for\s*button/gi,
-            /course\s*search\s*tool/gi,
             /course\s*maintenance\s*request/gi,
             /copyright\s*permission/gi,
             /copyediting\s*style\s*sheet/gi,
@@ -33,6 +34,8 @@ module.exports = (course, moduleItem, callback) => {
             /how\s*to\s*understand\s*due\s*date(s)*/gi,
             /^schedule$/gi,
             /course\s*schedule\d*\D*archived/gi,
+            /course\s*maintenance\s*log/gi,
+            /course\s*search\s*tool/gi,
         ];
     }
 

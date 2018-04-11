@@ -1,3 +1,9 @@
+/****************************************************************************
+ * Module Items Publish Settings
+ * Description: Certain module items need to be set to 'published' and others
+ * need to be set to not be 'published'. This module will set the module item
+ * to published/ not published if it is specified in the actionItems array
+ ****************************************************************************/
 module.exports = (course, moduleItem, callback) => {
     //only add the platforms your grandchild should run in
     var validPlatforms = ['online', 'pathway'];

@@ -1,3 +1,11 @@
+/****************************************************************************
+ * Module Items Position
+ * Description: To help standardize the module items in Canvas, this module
+ * will set the position/ order of specific module items. So if the course is
+ * an online course, it will put the Lesson Notes as the first item in its
+ * module and will set the Notes from Instructor discussion topic as the 
+ * second item in each module, so as to keep the ordering consistent
+ ****************************************************************************/
 module.exports = (course, moduleItem, callback) => {
     //only add the platforms your grandchild should run in
     var validPlatforms = ['online', 'pathway'];

@@ -26,6 +26,9 @@ module.exports = (course, moduleItem, callback) => {
         title: /copyright\s*(and|&)\s*source\s*/gi,
         newUrl: 'https://docs.google.com/a/byui.edu/spreadsheets/d/156Y7L6XbeWHpNvK4h1oVpAOTAr141IonyKT_qLeSUZg/edit?usp=sharing'
     }, {
+        title: /teaching\s*group\s*directory/gi,
+        newUrl: 'https://content.byui.edu/integ/gen/8872d2b2-91d5-4953-a357-3097ef2aa5d0/0/?.vi=file&attachment.uuid=3ad2dddf-7d44-4b54-8441-5fba4186758b'
+    }, {
         title: /course\s*map|design\s*workbook/gi,
         newUrl: course.info.designWorkbookURL
     }];

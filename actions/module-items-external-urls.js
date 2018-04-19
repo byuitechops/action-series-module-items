@@ -3,12 +3,6 @@ module.exports = (course, moduleItem, callback) => {
     var validPlatforms = ['online', 'pathway'];
     var validPlatform = validPlatforms.includes(course.settings.platform);
 
-    /* If the item is marked for deletion or isn't a valid platform type, do nothing */
-    if (moduleItem.techops.delete === true || validPlatform !== true) {
-        callback(null, course, moduleItem);
-        return;
-    }
-
     /* Potential matches in LOWER case */
     var urlsToChange = [{
         title: /University\s*Polic/gi,
@@ -60,9 +54,9 @@ module.exports = (course, moduleItem, callback) => {
     }
 
     /* The test returns TRUE or FALSE - action() is called if true */
-    if (item != undefined) {
-        action();
-    } else {
+    if (item === undefined || moduleItem.techops.delete === true | validPlatform === false) {
         callback(null, course, moduleItem);
+    } else {
+        action();
     }
 };

@@ -7,6 +7,9 @@
     "async": "^2.6.0",
     "canvas-wrapper": "github:byuitechops/canvas-wrapper"
   },
+  "devDependencies": {
+    "tap": "^10.7.3"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

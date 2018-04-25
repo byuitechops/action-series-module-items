@@ -4,22 +4,23 @@ const canvas = require('canvas-wrapper');
 const asyncLib = require('async');
 
 module.exports = (course, callback) => {
-    tap.test('action-series-', (test) => {
-        function _delete() {
+    tap.test('action-series-module-items', (tapTest) => {
+        function module_items_delete(deleteCallback) {
+            deleteCallback(null);
             return;
         }
 
-        /* An array of functions for each associated action in action-series- */
+        /* An array of functions for each associated action in action-series-module-items */
         var myFunctions = [
-            _delete,
+            module_items_delete,
         ];
 
         /* Run each universal grandchilds' test in its own function, one at a time */
-        asyncLib.eachSeries(myFunctions, (eachSeriesErr) => {
-            if (eachSeriesErr) {
-                course.error(eachSeriesErr);
+        asyncLib.series(myFunctions, (seriesErr) => {
+            if (seriesErr) {
+                course.error(seriesErr);
             }
-            test.end();
+            tapTest.end();
         });
     });
 

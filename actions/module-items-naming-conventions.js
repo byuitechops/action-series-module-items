@@ -149,7 +149,7 @@ module.exports = (course, item, callback) => {
             callback(null, course, item);
         }
     } catch (e) {
-        course.error(e);
+        course.error(new Error(e));
         callback(null, course, item);
     }
 };

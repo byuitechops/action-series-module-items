@@ -61,7 +61,7 @@ module.exports = (course, moduleItem, callback) => {
             action();
         }
     } catch (e) {
-        course.error(e);
+        course.error(new Error(e));
         callback(null, course, moduleItem);
     }
 };

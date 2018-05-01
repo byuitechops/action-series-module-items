@@ -23,11 +23,10 @@ module.exports = (course, moduleItem, callback) => {
         }];
 
         /* If the item is in the Instructor Resources Module, unpublish it */
+        /* The test returns TRUE or FALSE - action() is called if true */
         if (/instructor\s*resources?/i.test(moduleItem.techops.parentModule.name)) {
             var found = { setting: false };
-            console.log(`in instructor resources`);
         } else {
-            /* The test returns TRUE or FALSE - action() is called if true */
             var found = actionItems.find(item => item.reg.test(moduleItem.title));
         }
         /* This is the action that happens if the test is passed */

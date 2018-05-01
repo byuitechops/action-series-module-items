@@ -22,9 +22,14 @@ module.exports = (course, moduleItem, callback) => {
             setting: false
         }];
 
-        /* The test returns TRUE or FALSE - action() is called if true */
-        var found = actionItems.find(item => item.reg.test(moduleItem.title));
-
+        /* If the item is in the Instructor Resources Module, unpublish it */
+        if (/instructor\s*resources?/i.test(moduleItem.techops.parentModule.name)) {
+            var found = { setting: false };
+            console.log(`in instructor resources`);
+        } else {
+            /* The test returns TRUE or FALSE - action() is called if true */
+            var found = actionItems.find(item => item.reg.test(moduleItem.title));
+        }
         /* This is the action that happens if the test is passed */
         function action() {
             var oldSetting = moduleItem.published;

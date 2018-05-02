@@ -22,9 +22,13 @@ module.exports = (course, moduleItem, callback) => {
             setting: false
         }];
 
+        /* If the item is in the Instructor Resources Module, unpublish it */
         /* The test returns TRUE or FALSE - action() is called if true */
-        var found = actionItems.find(item => item.reg.test(moduleItem.title));
-
+        if (/instructor\s*resources?/i.test(moduleItem.techops.parentModule.name)) {
+            var found = { setting: false };
+        } else {
+            var found = actionItems.find(item => item.reg.test(moduleItem.title));
+        }
         /* This is the action that happens if the test is passed */
         function action() {
             var oldSetting = moduleItem.published;
@@ -38,6 +42,7 @@ module.exports = (course, moduleItem, callback) => {
             callback(null, course, moduleItem);
         }
 
+        /* Test */
         if (found != undefined) {
             action();
         } else {

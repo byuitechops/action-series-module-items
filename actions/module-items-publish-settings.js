@@ -42,6 +42,7 @@ module.exports = (course, moduleItem, callback) => {
             callback(null, course, moduleItem);
         }
 
+        /* Test */
         if (found != undefined) {
             action();
         } else {

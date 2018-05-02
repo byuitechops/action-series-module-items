@@ -50,8 +50,23 @@ module.exports = (course, moduleItem, callback) => {
             ];
         }
 
+        /* A list of all valid headers in the modules Instructor Resources and Student Resources */
+        var standardHeaders = [
+            /standard\s*resources/gi,
+            /supplemental\s*resources/gi,
+        ];
+
+        /* Check if the item is a standard header in Instructor Resources or Student Resources. Delete it otherwise. */
+        var instructorResources = /instructor\s*resources?/i.test(moduleItem.techops.parentModule.name);
+        var studentResources = /^\s*student\s*resources?/i.test(moduleItem.techops.parentModule.name);
+        var standardHeader = standardHeaders.find(header => header.test(moduleItem.title));
+
         /* The test returns TRUE or FALSE - action() is called if true */
-        var found = doomedItems.find(item => item.test(moduleItem.title));
+        if (moduleItem.type === 'SubHeader' && standardHeader === undefined && (instructorResources || studentResources)) {
+            var found = true;
+        } else {
+            var found = doomedItems.find(item => item.test(moduleItem.title));
+        }
 
         /* This is the action that happens if the test is passed */
         function action() {
@@ -71,6 +86,7 @@ module.exports = (course, moduleItem, callback) => {
             callback(null, course, moduleItem);
         }
 
+        /* Test */
         if (found != undefined) {
             action();
         } else {

@@ -47,7 +47,14 @@ module.exports = (course, moduleItem, callback) => {
                 /course\s*search\s*tool/gi,
                 /weekly\s*patterns?\s*(and|&)\s*expectations?\s*/gi,
                 /course\s*outline/gi,
+                /syllabus(?!\s*quiz)(?!\s*discussion)(?!\s*activity)/gi,
+                /instructor\shelp\sguide:?\sgetting\sstarted\s?(with\szoom)?/gi,
             ];
+        }
+
+        // REMOVE this is for testing
+        if (moduleItem.title.toLowerCase.includes('instructor')) {
+            console.log('FOUND: ', moduleItem);
         }
 
         /* The test returns TRUE or FALSE - action() is called if true */

@@ -18,7 +18,7 @@ module.exports = (course, moduleItem, callback) => {
 
         /* moduleItems to be published, in LOWER case */
         var actionItems = [{
-            reg: /\d*?\s*(lesson|week)\s*\d*?\s*notes?/gi,
+            reg: /\d*?\s*(teacher|lesson|week)\s*\d*?\s*notes?/gi,
             setting: false
         }];
 

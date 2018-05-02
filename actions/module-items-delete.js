@@ -47,7 +47,14 @@ module.exports = (course, moduleItem, callback) => {
                 /course\s*search\s*tool/gi,
                 /weekly\s*patterns?\s*(and|&)\s*expectations?\s*/gi,
                 /course\s*outline/gi,
+                /syllabus(?!\s*quiz)(?!\s*discussion)(?!\s*activity)/gi,
+                /instructor\shelp\sguide:?\sgetting\sstarted\s?(with\szoom)?/gi,
             ];
+        }
+
+        // REMOVE this is for testing
+        if (moduleItem.title.toLowerCase.includes('instructor')) {
+            console.log('FOUND: ', moduleItem);
         }
 
         /* A list of all valid headers in the modules Instructor Resources and Student Resources */

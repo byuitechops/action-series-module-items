@@ -4,6 +4,8 @@
  * need to be set to not be 'published'. This module will set the module item
  * to published/ not published if it is specified in the actionItems array
  ****************************************************************************/
+var canvas = require('canvas-wrapper');
+
 module.exports = (course, moduleItem, callback) => {
     try {
         //only add the platforms your grandchild should run in
@@ -16,20 +18,45 @@ module.exports = (course, moduleItem, callback) => {
             return;
         }
 
-        /* moduleItems to be published, in LOWER case */
-        var actionItems = [{
+         /* moduleItems to be published, in LOWER case */
+         var actionItems = [{
             reg: /\d*?\s*(teacher|lesson|week)\s*\d*?\s*notes?/gi,
             setting: false
         }];
 
-        /* If the item is in the Instructor Resources Module, unpublish it */
         /* The test returns TRUE or FALSE - action() is called if true */
-        if (/instructor\s*resources?/i.test(moduleItem.techops.parentModule.name)) {
-            var found = { setting: false };
-        } else {
-            var found = actionItems.find(item => item.reg.test(moduleItem.title));
+        var found = actionItems.find(item => item.reg.test(moduleItem.title));
+
+        /*************************************************
+         * A function to unpublish files 
+         *************************************************/
+        function unpublishFile() {
+            /* Get the fileId from the moduleItem url attribute (i.e. 1025654 from https://byui.instructure.com/api/v1/courses/12018/files/1025654" */
+            var fileId = moduleItem.url.split('/');
+            fileId = fileId.slice(-1);
+            fileId = fileId.join('');
+            /* Get the file, then change its 'locked' attribute to 'true' */
+            canvas.get(`/api/v1/files/${fileId}`, (err, file) => {
+                if (err) {
+                    course.error(new Error(err));
+                    callback(null, course, moduleItem);
+                    return;
+                }
+                canvas.put(`/api/v1/files/${fileId}`, {
+                    'locked': true
+                }, (err) => {
+                    if (err) {
+                        course.error(new Error(err));
+                    }
+                    callback(null, course, moduleItem);
+                    return;
+                });
+            });
         }
-        /* This is the action that happens if the test is passed */
+
+        /***********************************************************
+         * This is the action that happens if the test is passed 
+         ***********************************************************/
         function action() {
             var oldSetting = moduleItem.published;
             moduleItem.published = found.setting;
@@ -42,12 +69,24 @@ module.exports = (course, moduleItem, callback) => {
             callback(null, course, moduleItem);
         }
 
-        /* Test */
-        if (found != undefined) {
+        /* If the item is in Instructor Resources and is a file, unpublish it here */
+        if (/instructor\s*resources?/i.test(moduleItem.techops.parentModule.name)) {
+            /* Module Items that are files must be unpublished in their own put requests */
+            if (moduleItem.type === 'File') {
+                unpublishFile();
+            } else {
+                /* Unpublish all items in Instructor Resources Module */
+                found = {
+                    setting: false
+                };
+                action();
+            }
+        } else if (found != undefined) {
             action();
         } else {
             callback(null, course, moduleItem);
         }
+
     } catch (e) {
         course.error(new Error(e));
         callback(null, course, moduleItem);

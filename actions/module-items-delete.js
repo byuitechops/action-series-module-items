@@ -52,11 +52,6 @@ module.exports = (course, moduleItem, callback) => {
             ];
         }
 
-        // REMOVE this is for testing
-        if (moduleItem.title.toLowerCase.includes('instructor')) {
-            console.log('FOUND: ', moduleItem);
-        }
-
         /* A list of all valid headers in the modules Instructor Resources and Student Resources */
         var standardHeaders = [
             /standard\s*resources/gi,

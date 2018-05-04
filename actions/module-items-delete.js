@@ -48,7 +48,6 @@ module.exports = (course, moduleItem, callback) => {
                 /weekly\s*patterns?\s*(and|&)\s*expectations?\s*/gi,
                 /course\s*outline/gi,
                 /syllabus(?!\s*quiz)(?!\s*discussion)(?!\s*activity)/gi,
-                /instructor\shelp\sguide:?\sgetting\sstarted\s?(with\szoom)?/gi,
             ];
         }
 

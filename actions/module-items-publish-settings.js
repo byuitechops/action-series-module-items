@@ -42,12 +42,20 @@ module.exports = (course, moduleItem, callback) => {
                     callback(null, course, moduleItem);
                     return;
                 }
+                var oldLocked = file.locked;
                 canvas.put(`/api/v1/files/${fileId}`, {
                     'locked': true
                 }, (err) => {
                     if (err) {
                         course.error(new Error(err));
                     }
+                    moduleItem.techops.log('Module Item - Publish Settings', {
+                        'Title': moduleItem.title,
+                        'ID': moduleItem.id,
+                        'Type': moduleItem.type,
+                        'Locked Before': oldLocked,
+                        'Locked After': moduleItem.locked,
+                    });
                     callback(null, course, moduleItem);
                     return;
                 });
@@ -62,9 +70,10 @@ module.exports = (course, moduleItem, callback) => {
             moduleItem.published = found.setting;
             moduleItem.techops.log('Module Item - Publish Settings', {
                 'Title': moduleItem.title,
+                'ID': moduleItem.id,
                 'Before': oldSetting,
                 'After': moduleItem.published,
-                'ID': moduleItem.id
+                'Type': moduleItem.type,
             });
             callback(null, course, moduleItem);
         }

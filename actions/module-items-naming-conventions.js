@@ -92,18 +92,18 @@ module.exports = (course, item, callback) => {
          *******************************************************************/
         function removePostfix(title) {
             /* Get each character in the module title */
-            var titleArray = title.split(''); // 'Lesson Notes-2' => [ L,e,s,s,o,n, , N,o,t,e,s,-,2 ]
+            var titleArray = title.split('');                               // 'Lesson Notes-2' => [ L,e,s,s,o,n, , N,o,t,e,s,-,2 ]
 
             /* Get the last three characters of the title */
-            var duplicateTitle = titleArray.slice(-3); // [ L,e,s,s,o,n, ,N,o,t,e,s,-,2 ] => [ s,-,2 ]
-            duplicateTitle = duplicateTitle.join(''); // [ s,-,2 ] => 's-2'
+            var duplicateTitle = titleArray.slice(-3);                      // [ L,e,s,s,o,n, ,N,o,t,e,s,-,2 ] => [ s,-,2 ]
+            duplicateTitle = duplicateTitle.join('');                       // [ s,-,2 ] => 's-2'
 
             /* If the last three characters of the title are '-#' or '-##', return the title without the '-#' */
             if (/-\d\d?$/g.test(duplicateTitle)) {
-                duplicateTitle = duplicateTitle.replace(/-\d\d?$/, ''); // 's-2' => 's'
-                var modifiedTitle = titleArray.slice(0, -3); // [ L,e,s,s,o,n, ,N,o,t,e,s,-,2 ] => [ L,e,s,s,o,n, ,N,o,t,e ]
-                modifiedTitle.push(duplicateTitle); // [ L,e,s,s,o,n, ,N,o,t,e ] => [ L,e,s,s,o,n, ,N,o,t,e,s ]
-                return modifiedTitle.join(''); // [ L,e,s,s,o,n, ,N,o,t,e,s ] => 'Lesson Notes'
+                duplicateTitle = duplicateTitle.replace(/-\d\d?$/, '');     // 's-2' => 's'
+                var modifiedTitle = titleArray.slice(0, -3);                // [ L,e,s,s,o,n, ,N,o,t,e,s,-,2 ] => [ L,e,s,s,o,n, ,N,o,t,e ]
+                modifiedTitle.push(duplicateTitle);                         // [ L,e,s,s,o,n, ,N,o,t,e ] => [ L,e,s,s,o,n, ,N,o,t,e,s ]
+                return modifiedTitle.join('');                              // [ L,e,s,s,o,n, ,N,o,t,e,s ] => 'Lesson Notes'
             }
             /* Else return the title as it was before */
             return title;
@@ -114,12 +114,12 @@ module.exports = (course, item, callback) => {
          *********************************************************/
         function modifyItemTitle() {
             /* Get each word in the module item title, if a title exists */
-            var title = item.title;
+            var title = item.title.trim();
             var itemTitleArray = title.split(' ');
 
             var weekNum = getWeekNum(title);
             var modifiedTitle = removePrefix(title, itemTitleArray);
-            modifiedTitle = removePostfix(modifiedTitle.trim());
+            modifiedTitle = removePostfix(modifiedTitle);
             var oldTitle = title;
             var newTitle = '';
             var doChange = false; // Will be set to true if any changes are to be made to the title in the following if statements
@@ -182,12 +182,6 @@ module.exports = (course, item, callback) => {
             callback(null, course, item);
             return;
         }
-
-        // /* If the item is a module item in Instructor Resources, don't apply any changes to it */
-        // if (item.techops.type === 'Module Item' && /instructor\s*resources?/i.test(item.techops.parentModule.name)) {
-        //     callback(null, course, item);
-        //     return;
-        // }
 
         /* items with specific naming conventions, in LOWER case */
         var specialItems = [

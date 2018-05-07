@@ -18,8 +18,8 @@ module.exports = (course, moduleItem, callback) => {
             return;
         }
 
-         /* moduleItems to be published, in LOWER case */
-         var actionItems = [{
+        /* moduleItems to be published, in LOWER case */
+        var actionItems = [{
             reg: /\d*?\s*(teacher|lesson|week)\s*\d*?\s*notes?/gi,
             setting: false
         }];
@@ -66,15 +66,17 @@ module.exports = (course, moduleItem, callback) => {
          * This is the action that happens if the test is passed 
          ***********************************************************/
         function action() {
-            var oldSetting = moduleItem.published;
-            moduleItem.published = found.setting;
-            moduleItem.techops.log('Module Item - Publish Settings', {
-                'Title': moduleItem.title,
-                'ID': moduleItem.id,
-                'Before': oldSetting,
-                'After': moduleItem.published,
-                'Type': moduleItem.type,
-            });
+            if (moduleItem.published !== found.setting) {
+                var oldSetting = moduleItem.published;
+                moduleItem.published = found.setting;
+                moduleItem.techops.log('Module Item - Publish Settings', {
+                    'Title': moduleItem.title,
+                    'ID': moduleItem.id,
+                    'Before': oldSetting,
+                    'After': moduleItem.published,
+                    'Type': moduleItem.type,
+                });
+            }
             callback(null, course, moduleItem);
         }
 

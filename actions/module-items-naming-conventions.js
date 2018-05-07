@@ -18,14 +18,12 @@ module.exports = (course, item, callback) => {
 
             /* If the parent module doesn't have a name, or if the module 
             item is not housed in a module at all, return an empty string */
-            if (item.techops.type === 'Module Item' && typeof item.techops.parentModule === 'undefined') {
+            if (typeof item.techops.parentModule === 'undefined') {
                 return weekNum;
             }
 
-            /* Get the module title if it is a module item */
-            if (item.techops.type === 'Module Item') {
-                title = item.techops.parentModule.name;
-            }
+            /* Get the module title */
+            title = item.techops.parentModule.name;
 
             /* Get each word in the module title */
             var titleArray = title.split(' ');
@@ -65,14 +63,6 @@ module.exports = (course, item, callback) => {
          * Ex: L1, W02, Lesson 03, Week 4 
          *******************************************************************/
         function removePrefix(title, itemTitleArray) {
-            /* If it is a discussion or quiz AND it already has the prefix 'Wxx _ActivityType_:' then get rid of the prefix */
-            if (item.techops.type === 'Discussion' || item.techops.type === 'Quiz') {
-                if (title.match(/W\d?\d?\s_ActivityType_:/)) {
-                    itemTitleArray.splice(0, 2);
-                    return itemTitleArray.join(' ');
-                }
-            }
-
             /* If the title is only one word or less, don't modify it */
             if (itemTitleArray.length <= 1) {
                 return title;
@@ -101,14 +91,14 @@ module.exports = (course, item, callback) => {
          * Ex: General Lesson Notes-2, Notes from Instructor-4 
          *******************************************************************/
         function removePostfix(title) {
-            /* Get each word in the module title */
+            /* Get each character in the module title */
             var titleArray = title.split(''); // 'Lesson Notes-2' => [ L,e,s,s,o,n, , N,o,t,e,s,-,2 ]
 
-            /* Get the last two letters of the title */
+            /* Get the last three characters of the title */
             var duplicateTitle = titleArray.slice(-3); // [ L,e,s,s,o,n, ,N,o,t,e,s,-,2 ] => [ s,-,2 ]
             duplicateTitle = duplicateTitle.join(''); // [ s,-,2 ] => 's-2'
 
-            /* If the last two letters of the title are '-#', return the title without the '-#' */
+            /* If the last three characters of the title are '-#' or '-##', return the title without the '-#' */
             if (/-\d\d?$/g.test(duplicateTitle)) {
                 duplicateTitle = duplicateTitle.replace(/-\d\d?$/, ''); // 's-2' => 's'
                 var modifiedTitle = titleArray.slice(0, -3); // [ L,e,s,s,o,n, ,N,o,t,e,s,-,2 ] => [ L,e,s,s,o,n, ,N,o,t,e ]
@@ -124,7 +114,7 @@ module.exports = (course, item, callback) => {
          *********************************************************/
         function modifyItemTitle() {
             /* Get each word in the module item title, if a title exists */
-            var title = item.techops.getTitle(item);
+            var title = item.title;
             var itemTitleArray = title.split(' ');
 
             var weekNum = getWeekNum(title);
@@ -140,9 +130,6 @@ module.exports = (course, item, callback) => {
                 newTitle = `W${weekNum} ${modifiedTitle}`;
                 doChange = true;
                 /* If it is a quiz or discussion, put the type in the title */
-            } else if (item.techops.type === 'Quiz' || item.techops.type === 'Discussion') {
-                newTitle = `W${weekNum} ${item.techops.type}: ${modifiedTitle}`;
-                doChange = true;
             } else if (item.type !== undefined && (item.type === 'Quiz' || item.type === 'Discussion')) {
                 newTitle = `W${weekNum} ${item.type}: ${modifiedTitle}`;
                 doChange = true;
@@ -152,7 +139,7 @@ module.exports = (course, item, callback) => {
                 (!title.match(/W\d\?d\?sQuiz:/))) {
                 newTitle = `W${weekNum} _ActivityType_: ${modifiedTitle}`;
                 doChange = true;
-            } 
+            }
 
             /* If the last word of the title is the same as the assignment type, delete the word from the title */
             var newTitleArray = newTitle.split(' ');
@@ -165,12 +152,12 @@ module.exports = (course, item, callback) => {
 
             if (doChange) {
                 /* Set the new title for the PUT object */
-                item.techops.setTitle(item, newTitle);
+                item.title = newTitle;
 
                 item.techops.log(`${item.techops.type} - Naming Conventions Added`, {
                     'Old Title': oldTitle,
                     'New Title': newTitle,
-                    'ID': item.techops.getID(item),
+                    'ID': item.id,
                 });
             }
             callback(null, course, item);
@@ -191,23 +178,16 @@ module.exports = (course, item, callback) => {
 
         /* For some reason, there was an item in testing with no title and it threw an error. */
         if (item.techops.getTitle(item) === undefined) {
-            course.warning(`The item with ID: ${item.techops.getID(item)} has no title.`);
+            course.warning(`The item with ID: ${item.id} has no title.`);
             callback(null, course, item);
             return;
         }
 
-        /* If it's a quiz or discussion type assignment, skip it because the naming convention will take care */
-        /* of it as a quiz or discussion separately, rather than doing it a second time as an assignment */
-        if (item.techops.type === 'Assignment' && (item.quiz_id !== undefined || item.discussion_topic !== undefined)) {
-            callback(null, course, item);
-            return;
-        }
-
-        /* If the item is a module item in Instructor Resources, don't apply any changes to it */
-        if (item.techops.type === 'Module Item' && item.techops.getTitle(item) !== undefined && /instructor\s*resources?/i.test(item.techops.parentModule.name)) {
-            callback(null, course, item);
-            return;
-        }
+        // /* If the item is a module item in Instructor Resources, don't apply any changes to it */
+        // if (item.techops.type === 'Module Item' && /instructor\s*resources?/i.test(item.techops.parentModule.name)) {
+        //     callback(null, course, item);
+        //     return;
+        // }
 
         /* items with specific naming conventions, in LOWER case */
         var specialItems = [
@@ -221,10 +201,11 @@ module.exports = (course, item, callback) => {
             /syllabus/gi,
         ];
 
-        var title = item.techops.getTitle(item);
+        var title = item.title.trim();
         var specialNaming = specialItems.find(reg => reg.test(title)); // True if the current item has a special naming convention
         var skip = skipItems.find(currItem => currItem.test(item.title)); // True if the current item shouldn't run on this grandchild
         var changeItem = /(l|w)(0?\d?\d)(\D|$)/gi.test(title); // True if item title has 'L01, W12, L4, W06, etc'
+        var instructorResources = /instructor\s*resources?/i.test(item.techops.parentModule.name) // True if the item is in the Instructor Resources Module
         var weeklyModule = false;
 
         /* Changes weeklyModule to TRUE if the item is in a weekly module */
@@ -233,9 +214,22 @@ module.exports = (course, item, callback) => {
         }
 
         /* if the item is a module item, call one function, else call another */
-        if ((item.techops.type === 'Module Item' && weeklyModule && !skip && item.type !== 'SubHeader')) {//||
-            // (changeItem && item.techops.type !== 'Module Item' && item.techops.type !== 'Module' && item.techops.type !== 'File')) {
+        if (!instructorResources && weeklyModule && !skip && item.type !== 'SubHeader') {
             modifyItemTitle();
+        } else if (!weeklyModule) {
+            /* Remove the postfix if one exists */
+            item.title = removePostfix(title) + ' ';
+
+            /* Log it */
+            item.techops.log(`${item.techops.type} - Naming Conventions Added`, {
+                'Old Title': title,
+                'New Title': item.title,
+                'ID': item.id,
+            });
+
+            /* End the grandchild */
+            callback(null, course, item);
+
         } else {
             callback(null, course, item);
         }

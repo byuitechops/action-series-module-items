@@ -6,25 +6,28 @@ module.exports = (course, moduleItem, callback) => {
 
         /* Potential matches in LOWER case */
         var urlsToChange = [{
-            title: /University\s*Polic/gi,
+            title: /University\s*Polic/i,
             newUrl: 'https://content.byui.edu/integ/gen/d24f576f-d34b-47be-a466-d00bd4792fb6/0/universitypolicies.html'
         }, {
-            title: /online\s*support\s*center/gi,
+            title: /online\s*support\s*center/i,
             newUrl: 'https://content.byui.edu/integ/gen/8872d2b2-91d5-4953-a357-3097ef2aa5d0/0/?.vi=file&attachment.uuid=e509c91c-e500-4d6d-9a20-b8ff1b0186f9'
         }, {
-            title: /library\s*research\s*guide/gi,
+            title: /library\s*research\s*guide/i,
             newUrl: 'https://content.byui.edu/integ/gen/8872d2b2-91d5-4953-a357-3097ef2aa5d0/0/?.vi=file&attachment.uuid=3b1239c4-a857-431b-b633-94d3fdbe396e'
         }, {
-            title: /academic\s*support\s*center/gi,
+            title: /academic\s*support\s*center/i,
             newUrl: 'https://content.byui.edu/integ/gen/8872d2b2-91d5-4953-a357-3097ef2aa5d0/0/?.vi=file&attachment.uuid=91d9ec86-03ef-4c49-805f-65d488a1085c'
         }, {
-            title: /copyright\s*(and|&)\s*source\s*/gi,
+            title: /copyright\s*(and|&)\s*source\s*/i,
             newUrl: 'https://docs.google.com/a/byui.edu/spreadsheets/d/156Y7L6XbeWHpNvK4h1oVpAOTAr141IonyKT_qLeSUZg/edit?usp=sharing'
         }, {
-            title: /teaching\s*group\s*directory/gi,
+            title: /teaching\s*group\s*directory/i,
             newUrl: 'https://content.byui.edu/integ/gen/8872d2b2-91d5-4953-a357-3097ef2aa5d0/0/?.vi=file&attachment.uuid=3ad2dddf-7d44-4b54-8441-5fba4186758b'
         }, {
-            title: /course\s*map|design\s*workbook/gi,
+            title: /online\s*instructor\s*community/i,
+            newUrl: 'https://content.byui.edu/integ/gen/8872d2b2-91d5-4953-a357-3097ef2aa5d0/0/?.vi=file&attachment.uuid=fc735ad6-708a-413d-b14d-90e18e1aaf45'
+        }, {
+            title: /course\s*map|design\s*workbook/i,
             newUrl: course.info.designWorkbookURL
         }];
 

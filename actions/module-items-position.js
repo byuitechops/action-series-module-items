@@ -25,6 +25,9 @@ module.exports = (course, moduleItem, callback) => {
         }, {
             itemKeyWord: /notes\s*from\s*instructor/i,
             position: 2
+        }, {
+            itemKeyWord: /^introduction$/i,
+            position: 2
         }];
 
         /* If the item's title contains one of the keywords, then we need to change its position. 

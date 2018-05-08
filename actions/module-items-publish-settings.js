@@ -8,24 +8,7 @@ var canvas = require('canvas-wrapper');
 
 module.exports = (course, moduleItem, callback) => {
     try {
-        //only add the platforms your grandchild should run in
-        var validPlatforms = ['online', 'pathway'];
-        var validPlatform = validPlatforms.includes(course.settings.platform);
 
-        /* If the item is marked for deletion or isn't a valid platform type, do nothing */
-        if (moduleItem.techops.delete === true || validPlatform !== true) {
-            callback(null, course, moduleItem);
-            return;
-        }
-
-         /* moduleItems to be published, in LOWER case */
-         var actionItems = [{
-            reg: /\d*?\s*(teacher|lesson|week)\s*\d*?\s*notes?/gi,
-            setting: false
-        }];
-
-        /* The test returns TRUE or FALSE - action() is called if true */
-        var found = actionItems.find(item => item.reg.test(moduleItem.title));
 
         /*************************************************
          * A function to unpublish files 
@@ -78,7 +61,29 @@ module.exports = (course, moduleItem, callback) => {
             callback(null, course, moduleItem);
         }
 
-        /* If the item is in Instructor Resources and is a file, unpublish it here */
+        /***************************************************************************
+         *                             START HERE
+         * If the item is in Instructor Resources and is a file, unpublish it here.
+         * Also, run the tests to see if action() or unpublishFile() should run. 
+         ***************************************************************************/
+        //only add the platforms your grandchild should run in
+        var validPlatforms = ['online', 'pathway'];
+        var validPlatform = validPlatforms.includes(course.settings.platform);
+
+        /* If the item is marked for deletion or isn't a valid platform type, do nothing */
+        if (moduleItem.techops.delete === true || validPlatform !== true) {
+            callback(null, course, moduleItem);
+            return;
+        }
+
+        /* moduleItems to be published, in LOWER case */
+        var actionItems = [{
+            reg: /\d*?\s*(teaching|lesson|week)\s*\d*?\s*notes?/gi,
+            setting: false
+        }];
+
+        /* The test returns TRUE or FALSE - action() is called if true */
+        var found = actionItems.find(item => item.reg.test(moduleItem.title));
         if (/instructor\s*resources?/i.test(moduleItem.techops.parentModule.name)) {
             /* Module Items that are files must be unpublished in their own put requests */
             if (moduleItem.type === 'File') {

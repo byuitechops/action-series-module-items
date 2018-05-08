@@ -187,12 +187,13 @@ module.exports = (course, item, callback) => {
         var specialItems = [
             /(teaching|lesson)\s*notes/gi, // W[##] Teaching Notes  (Do NOT Publish)
             /notes\s*from\s*instructor/gi, // W[##] Notes from Instructor
+            /^introduction$/gi,            // W[##] Introduction
         ];
 
         /* An array of module items NOT to change */
         var skipItems = [
             /orientation\s*to\s*online\s*learning/gi,
-            /syllabus/gi,
+            /^syllabus$/gi,
         ];
 
         var title = item.title.trim();

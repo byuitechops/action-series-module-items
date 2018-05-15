@@ -23,29 +23,24 @@ module.exports = (course, moduleItem, callback) => {
 
         /* Potential matches in LOWER case */
         var typeRequirements = [{
-            type: 'Page',
+            type: 'ExternalUrl',
             requirement: 'must_view',
         }, {
-            type: 'ExternalUrl',
+            type: 'File',
+            requirement: 'must_view',
+        }, {
+            type: 'Page',
             requirement: 'must_view',
         }, {
             type: 'Discussion',
             requirement: 'must_contribute',
         }, {
-            type: 'Quiz',
-            requirement: 'must_submit',
-        }, {
             type: 'Assignment',
             requirement: 'must_submit',
-        }, 
-        // {
-        //     type: 'File',
-        //     requirement: ,
-        // }, {
-        //     type: 'ExternalTool',
-        //     requirement: ,
-        // }
-    ];
+        }, {
+            type: 'Quiz',
+            requirement: 'must_submit',
+        }];
 
         /* If the module item type is the same as one in the typeRequirments object array, return the match */
         var requirementObj = typeRequirements.find(typeRequirement => typeRequirement.type === moduleItem.type);
@@ -62,7 +57,7 @@ module.exports = (course, moduleItem, callback) => {
         }
 
         /* The test returns TRUE or FALSE - action() is called if true */
-        if (/(Week|Lesson|L|W)\s*(\d*(\D|$))/gi.test(moduleItem.techops.parentModule.name)) {
+        if (/(Week|Lesson|L|W)\s*(\d*(\D|$))/gi.test(moduleItem.techops.parentModule.name) && requirementObj !== undefined) {
             action();
         } else {
             callback(null, course, moduleItem);

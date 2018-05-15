@@ -9,6 +9,7 @@ var actions = [
     require('./actions/module-items-delete.js'),
     require('./actions/module-items-publish-settings.js'),
     require('./actions/module-items-naming-conventions.js'),
+    require('./actions/module-items-requirements.js'),
 ];
 
 class TechOps {
@@ -100,6 +101,7 @@ function buildPutObj(item) {
         'module_item[new_tab]': item.new_tab,
         'module_item[published]': item.published,
         'module_item[module_id]': item.module_id,
+        'module_item[completion_requirement]': item.completion_requirement,
     };
 }
 

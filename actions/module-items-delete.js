@@ -20,41 +20,43 @@ module.exports = (course, moduleItem, callback) => {
         var doomedItems = [];
         if (course.settings.platform === 'campus') {
             doomedItems = [
-                /^about\s*content$/gi,
-                /^about\s*discussions$/gi,
-                /^discussion\s*forums$/gi,
-                /^about\s*assignments$/gi,
-                /^about\s*quiz(zes)?$/gi,
-                /^about\s*grades?$/gi,
-                /^about\s*user\s*progress?$/gi,
-                /^conclusion?$/gi,
-                /course\s*maintenance\s*log/gi,
-                /course\s*search\s*tool/gi,
-                /weekly\s*patterns?\s*(and|&)\s*expectations?\s*/gi,
-                /course\s*outline/gi,
+                /^about\s*content$/i,
+                /^about\s*discussions$/i,
+                /^discussion\s*forums$/i,
+                /^about\s*assignments$/i,
+                /^about\s*quiz(zes)?$/i,
+                /^about\s*grades?$/i,
+                /^about\s*user\s*progress?$/i,
+                /^conclusion?$/i,
+                /course\s*maintenance\s*log/i,
+                /course\s*search\s*tool/i,
+                /weekly\s*patterns?\s*(and|&)\s*expectations?\s*/i,
+                /course\s*outline/i,
             ];
         } else {
             doomedItems = [
-                /guidelines\s*for\s*button/gi,
-                /course\s*maintenance\s*request/gi,
-                /copyright\s*permission/gi,
-                /copyediting\s*style\s*sheet/gi,
-                /discussion\sforums/gi,
-                /how\s*to\s*understand\s*due\s*date(s)*/gi,
-                /^schedule$/gi,
-                /course\s*schedule\d*\D*archived/gi,
-                /course\s*maintenance\s*log/gi,
-                /course\s*search\s*tool/gi,
-                /weekly\s*patterns?\s*(and|&)\s*expectations?\s*/gi,
-                /course\s*outline/gi,
-                /syllabus(?!\s*quiz)(?!\s*discussion)(?!\s*activity)/gi,
+                /guidelines\s*for\s*button/i,
+                /course\s*maintenance\s*request/i,
+                /copyright\s*permission/i,
+                /copyediting\s*style\s*sheet/i,
+                /discussion\sforums/i,
+                /how\s*to\s*understand\s*due\s*date(s)*/i,
+                /^schedule$/i,
+                /course\s*schedule\d*\D*archived/i,
+                /course\s*maintenance\s*log/i,
+                /course\s*search\s*tool/i,
+                /weekly\s*patterns?\s*(and|&)\s*expectations?\s*/i,
+                /course\s*outline/i,
+                /course\s*schedule/i,
+                /syllabus(?!\s*quiz)(?!\s*discussion)(?!\s*activity)/i,
+                /setup\snotes\s&\scourse/i
             ];
         }
 
         /* A list of all valid headers in the modules Instructor Resources and Student Resources */
         var standardHeaders = [
-            /standard\s*resources/gi,
-            /supplemental\s*resources/gi,
+            /standard\s*resources/i,
+            /supplemental\s*resources/i,
         ];
 
         /* Check if the item is a standard header in Instructor Resources or Student Resources. Delete it otherwise. */

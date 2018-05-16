@@ -63,6 +63,16 @@ module.exports = (course, item, callback) => {
          * Ex: L1, W02, Lesson 03, Week 4 
          *******************************************************************/
         function removePrefix(title, itemTitleArray) {
+            /* If it is a discussion or quiz AND it already has the prefix 'Wxx _ActivityType_:' then get rid of the prefix */
+            if (item.type === 'Discussion' || item.type === 'Quiz') {
+                if ((title.match(/W\d?\d?\s_ActivityType_:/)) ||
+                    (title.match(/W\d?\d?\sDiscussion:/)) ||
+                    (title.match(/W\d?\d?\sQuiz:/))) {
+                    itemTitleArray.splice(0, 2);
+                    return itemTitleArray.join(' ');
+                }
+            }
+
             /* If the title is only one word or less, don't modify it */
             if (itemTitleArray.length <= 1) {
                 return title;
@@ -92,18 +102,18 @@ module.exports = (course, item, callback) => {
          *******************************************************************/
         function removePostfix(title) {
             /* Get each character in the module title */
-            var titleArray = title.split('');                               // 'Lesson Notes-2' => [ L,e,s,s,o,n, , N,o,t,e,s,-,2 ]
+            var titleArray = title.split(''); // 'Lesson Notes-2' => [ L,e,s,s,o,n, , N,o,t,e,s,-,2 ]
 
             /* Get the last three characters of the title */
-            var duplicateTitle = titleArray.slice(-3);                      // [ L,e,s,s,o,n, ,N,o,t,e,s,-,2 ] => [ s,-,2 ]
-            duplicateTitle = duplicateTitle.join('');                       // [ s,-,2 ] => 's-2'
+            var duplicateTitle = titleArray.slice(-3); // [ L,e,s,s,o,n, ,N,o,t,e,s,-,2 ] => [ s,-,2 ]
+            duplicateTitle = duplicateTitle.join(''); // [ s,-,2 ] => 's-2'
 
             /* If the last three characters of the title are '-#' or '-##', return the title without the '-#' */
             if (/-\d\d?$/g.test(duplicateTitle)) {
-                duplicateTitle = duplicateTitle.replace(/-\d\d?$/, '');     // 's-2' => 's'
-                var modifiedTitle = titleArray.slice(0, -3);                // [ L,e,s,s,o,n, ,N,o,t,e,s,-,2 ] => [ L,e,s,s,o,n, ,N,o,t,e ]
-                modifiedTitle.push(duplicateTitle);                         // [ L,e,s,s,o,n, ,N,o,t,e ] => [ L,e,s,s,o,n, ,N,o,t,e,s ]
-                return modifiedTitle.join('');                              // [ L,e,s,s,o,n, ,N,o,t,e,s ] => 'Lesson Notes'
+                duplicateTitle = duplicateTitle.replace(/-\d\d?$/, ''); // 's-2' => 's'
+                var modifiedTitle = titleArray.slice(0, -3); // [ L,e,s,s,o,n, ,N,o,t,e,s,-,2 ] => [ L,e,s,s,o,n, ,N,o,t,e ]
+                modifiedTitle.push(duplicateTitle); // [ L,e,s,s,o,n, ,N,o,t,e ] => [ L,e,s,s,o,n, ,N,o,t,e,s ]
+                return modifiedTitle.join(''); // [ L,e,s,s,o,n, ,N,o,t,e,s ] => 'Lesson Notes'
             }
             /* Else return the title as it was before */
             return title;
@@ -130,7 +140,8 @@ module.exports = (course, item, callback) => {
                 newTitle = `W${weekNum} ${modifiedTitle}`;
                 doChange = true;
                 /* If it is a quiz or discussion, put the type in the title */
-            } else if (item.type !== undefined && (item.type === 'Quiz' || item.type === 'Discussion')) {
+            } else if (item.type !== undefined && (item.type === 'Quiz' || item.type === 'Discussion') &&
+                (!title.match(/W\d\d\sDiscussion:/)) && (!title.match(/W\d\d\sQuiz:/))) {
                 newTitle = `W${weekNum} ${item.type}: ${modifiedTitle}`;
                 doChange = true;
                 /* If it doesn't already have the correct prefix, put it on  */
@@ -187,7 +198,7 @@ module.exports = (course, item, callback) => {
         var specialItems = [
             /(teaching|lesson)\s*notes/gi, // W[##] Teaching Notes  (Do NOT Publish)
             /notes\s*from\s*instructor/gi, // W[##] Notes from Instructor
-            /^introduction$/gi,            // W[##] Introduction
+            /^introduction$/gi, // W[##] Introduction
         ];
 
         /* An array of module items NOT to change */

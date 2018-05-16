@@ -23,35 +23,39 @@ module.exports = (course, moduleItem, callback) => {
 
         /* Potential matches in LOWER case */
         var typeRequirements = [{
-            type: 'ExternalUrl',
+            checkType: 'ExternalUrl',
             requirement: 'must_view',
         }, {
-            type: 'File',
+            checkType: 'File',
             requirement: 'must_view',
         }, {
-            type: 'Page',
+            checkType: 'Page',
             requirement: 'must_view',
         }, {
-            type: 'Discussion',
+            checkType: 'Discussion',
             requirement: 'must_contribute',
         }, {
-            type: 'Assignment',
+            checkType: 'Assignment',
             requirement: 'must_submit',
         }, {
-            type: 'Quiz',
+            checkType: 'Quiz',
             requirement: 'must_submit',
         }];
 
         /* If the module item type is the same as one in the typeRequirments object array, return the match */
-        var requirementObj = typeRequirements.find(typeRequirement => typeRequirement.type === moduleItem.type);
+        var requirementObj = typeRequirements.find(typeRequirement => typeRequirement.checkType === moduleItem.type);
 
         /* This is the action that happens if the test is passed */
         function action() {
-            moduleItem.completion_requirement.type = requirementObj.requirement;
+            moduleItem.completion_requirement = { type: requirementObj.requirement };
+            console.log(moduleItem.title);
+            console.log(moduleItem.type);
+            console.log(`requirementObj: ${JSON.stringify(requirementObj)}`);
+            console.log(`moduleItem.completion_requirement.type: ${moduleItem.completion_requirement.type}\n`)
             moduleItem.techops.log(`${moduleItem.techops.type} - Requirements Set`, {
                 'Title': moduleItem.title,
                 'ID': moduleItem.id,
-                'Requirement': requirementObj.requirement,
+                'Requirement': moduleItem.completion_requirement.type,
             });
             callback(null, course, moduleItem);
         }

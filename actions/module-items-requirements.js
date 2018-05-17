@@ -47,11 +47,9 @@ module.exports = (course, moduleItem, callback) => {
 
         /* This is the action that happens if the test is passed */
         function action() {
-            moduleItem.completion_requirement = { type: requirementObj.requirement };
-            console.log(moduleItem.title);
-            console.log(moduleItem.type);
-            console.log(`requirementObj: ${JSON.stringify(requirementObj)}`);
-            console.log(`moduleItem.completion_requirement.type: ${moduleItem.completion_requirement.type}\n`)
+            moduleItem.completion_requirement = {
+                'type': requirementObj.requirement
+            };
             moduleItem.techops.log(`${moduleItem.techops.type} - Requirements Set`, {
                 'Title': moduleItem.title,
                 'ID': moduleItem.id,

@@ -63,8 +63,8 @@ module.exports = (course, item, callback) => {
          * Ex: L1, W02, Lesson 03, Week 4 
          *******************************************************************/
         function removePrefix(title, itemTitleArray) {
-            /* If it is a discussion or quiz AND it already has the prefix 'Wxx _ActivityType_:' then get rid of the prefix */
-            if (item.type === 'Discussion' || item.type === 'Quiz') {
+             /* If it is a discussion or quiz AND it already has the prefix 'Wxx _ActivityType_:' then get rid of the prefix */
+             if (item.type === 'Discussion' || item.type === 'Quiz') {
                 if ((title.match(/W\d?\d?\s_ActivityType_:/)) ||
                     (title.match(/W\d?\d?\sDiscussion:/)) ||
                     (title.match(/W\d?\d?\sQuiz:/))) {
@@ -72,7 +72,7 @@ module.exports = (course, item, callback) => {
                     return itemTitleArray.join(' ');
                 }
             }
-
+            
             /* If the title is only one word or less, don't modify it */
             if (itemTitleArray.length <= 1) {
                 return title;
@@ -139,15 +139,8 @@ module.exports = (course, item, callback) => {
             if (specialNaming) {
                 newTitle = `W${weekNum} ${modifiedTitle}`;
                 doChange = true;
-                /* If it is a quiz or discussion, put the type in the title */
-            } else if (item.type !== undefined && (item.type === 'Quiz' || item.type === 'Discussion') &&
-                (!title.match(/W\d\d\sDiscussion:/)) && (!title.match(/W\d\d\sQuiz:/))) {
-                newTitle = `W${weekNum} ${item.type}: ${modifiedTitle}`;
-                doChange = true;
                 /* If it doesn't already have the correct prefix, put it on  */
-            } else if ((!title.match(/W\d?\d?\s_ActivityType_:/)) &&
-                (!title.match(/W\d?\d?\sDiscussion:/)) &&
-                (!title.match(/W\d\?d\?sQuiz:/))) {
+            } else if (!title.match(/W\d?\d?\s_ActivityType_:/)) {
                 newTitle = `W${weekNum} _ActivityType_: ${modifiedTitle}`;
                 doChange = true;
             }
@@ -223,16 +216,18 @@ module.exports = (course, item, callback) => {
         if (!instructorResources && weeklyModule && !skip && item.type !== 'SubHeader') {
             modifyItemTitle();
         } else if (!weeklyModule) {
+            var oldTitle = item.title;
             /* Remove the postfix if one exists */
             item.title = removePostfix(title) + ' ';
 
-            /* Log it */
-            item.techops.log(`${item.techops.type} - Naming Conventions Added`, {
-                'Old Title': title,
-                'New Title': item.title,
-                'ID': item.id,
-            });
-
+            /* If the title has changed, log it */
+            if (oldTitle !== item.title) {
+                item.techops.log(`${item.techops.type} - Naming Conventions Added`, {
+                    'Old Title': title,
+                    'New Title': item.title,
+                    'ID': item.id,
+                });
+            }
             /* End the grandchild */
             callback(null, course, item);
 

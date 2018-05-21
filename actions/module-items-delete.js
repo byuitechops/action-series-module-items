@@ -49,7 +49,8 @@ module.exports = (course, moduleItem, callback) => {
                 /course\s*outline/i,
                 /course\s*schedule/i,
                 /syllabus(?!\s*quiz)(?!\s*discussion)(?!\s*activity)/i,
-                /setup\snotes\s&\scourse/i
+                /setup\snotes\s&\scourse/i,
+                /(mid)\s*\D(course|semester)\s*(feedback)/i,
             ];
         }
 

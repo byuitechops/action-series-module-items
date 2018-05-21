@@ -50,7 +50,7 @@ module.exports = (course, moduleItem, callback) => {
                 /course\s*schedule/i,
                 /syllabus(?!\s*quiz)(?!\s*discussion)(?!\s*activity)/i,
                 /setup\snotes\s&\scourse/i,
-                /(mid)\s*\D(course|semester)\s*(feedback)/i,
+                /(mid)\s*\D?\s*(course|semester)\s*(feedback)/i,
             ];
         }
 

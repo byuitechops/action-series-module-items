@@ -191,7 +191,7 @@ module.exports = (course, item, callback) => {
         var specialItems = [
             /(teaching|lesson)\s*notes/gi, // W[##] Teaching Notes  (Do NOT Publish)
             /notes\s*from\s*instructor/gi, // W[##] Notes from Instructor
-            /^introduction$/gi, // W[##] Introduction
+            /^\s*introduction\s*-?\d*\s*$/gi, // W[##] Introduction
         ];
 
         /* An array of module items NOT to change */

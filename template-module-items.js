@@ -9,6 +9,7 @@ var actions = [
     require('./actions/module-items-delete.js'),
     require('./actions/module-items-publish-settings.js'),
     require('./actions/module-items-naming-conventions.js'),
+    require('./actions/module-items-indent-verifier.js'),
 ];
 
 class TechOps {

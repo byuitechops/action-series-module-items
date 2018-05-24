@@ -160,6 +160,7 @@ function getID(item) {
 }
 
 module.exports = {
+    prefix: 'module-items',
     actions: actions,
     getItems: getItems,
     putItem: putItem,

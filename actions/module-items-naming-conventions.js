@@ -63,8 +63,8 @@ module.exports = (course, item, callback) => {
          * Ex: L1, W02, Lesson 03, Week 4 
          *******************************************************************/
         function removePrefix(title, itemTitleArray) {
-             /* If it is a discussion or quiz AND it already has the prefix 'Wxx _ActivityType_:' then get rid of the prefix */
-             if (item.type === 'Discussion' || item.type === 'Quiz') {
+            /* If it is a discussion or quiz AND it already has the prefix 'Wxx _ActivityType_:' then get rid of the prefix */
+            if (item.type === 'Discussion' || item.type === 'Quiz') {
                 if ((title.match(/W\d?\d?\s_ActivityType_:/)) ||
                     (title.match(/W\d?\d?\sDiscussion:/)) ||
                     (title.match(/W\d?\d?\sQuiz:/))) {
@@ -72,7 +72,7 @@ module.exports = (course, item, callback) => {
                     return itemTitleArray.join(' ');
                 }
             }
-            
+
             /* If the title is only one word or less, don't modify it */
             if (itemTitleArray.length <= 1) {
                 return title;
@@ -241,3 +241,7 @@ module.exports = (course, item, callback) => {
         callback(null, course, item);
     }
 };
+
+module.exports.details = {
+    title: 'module-items-naming-conventions'
+}

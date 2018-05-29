@@ -63,3 +63,7 @@ module.exports = (course, moduleItem, callback) => {
         callback(null, course, moduleItem);
     }
 };
+
+module.exports.details = {
+    title: 'module-items-indent-verifier'
+}

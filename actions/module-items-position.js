@@ -8,12 +8,12 @@
  ****************************************************************************/
 module.exports = (course, moduleItem, callback) => {
     try {
-        //only add the platforms your grandchild should run in
-        var validPlatforms = ['online', 'pathway'];
-        var validPlatform = validPlatforms.includes(course.settings.platform);
 
-        /* If the item is marked for deletion or isn't a valid platform type, do nothing */
-        if (moduleItem.techops.delete === true || validPlatform !== true) {
+
+
+
+        /* If the item is marked for deletion, do nothing */
+        if (moduleItem.techops.delete === true) {
             callback(null, course, moduleItem);
             return;
         }

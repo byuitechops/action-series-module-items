@@ -1,8 +1,8 @@
 module.exports = (course, moduleItem, callback) => {
     try {
-        //only add the platforms your grandchild should run in
-        var validPlatforms = ['online', 'pathway'];
-        var validPlatform = validPlatforms.includes(course.settings.platform);
+
+
+
 
         /* Potential matches in LOWER case */
         var urlsToChange = [{
@@ -58,7 +58,7 @@ module.exports = (course, moduleItem, callback) => {
         }
 
         /* The test returns TRUE or FALSE - action() is called if true */
-        if (item === undefined || moduleItem.techops.delete === true | validPlatform === false) {
+        if (item === undefined || moduleItem.techops.delete === true) {
             callback(null, course, moduleItem);
         } else {
             action();

@@ -170,12 +170,9 @@ module.exports = (course, item, callback) => {
         /**************************************************************
          *                      Start Here                            * 
          **************************************************************/
-        //only add the platforms your grandchild should run in
-        var validPlatforms = ['online', 'pathway', 'campus'];
-        var validPlatform = validPlatforms.includes(course.settings.platform)
 
         /* If the item is marked for deletion, or if it already matches the naming convention, do nothing */
-        if (item.techops.delete === true || validPlatform !== true) {
+        if (item.techops.delete === true) {
             callback(null, course, item);
             return;
         }

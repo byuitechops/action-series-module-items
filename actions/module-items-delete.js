@@ -32,6 +32,7 @@ module.exports = (course, moduleItem, callback) => {
                 /course\s*search\s*tool/i,
                 /weekly\s*patterns?\s*(and|&)\s*expectations?\s*/i,
                 /course\s*outline/i,
+                /intro\sto\si-learn\s3\.0/i,
             ];
         } else {
             doomedItems = [
@@ -104,4 +105,4 @@ module.exports = (course, moduleItem, callback) => {
 
 module.exports.details = {
     title: 'module-items-delete'
-}
+};

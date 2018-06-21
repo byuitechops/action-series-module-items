@@ -67,9 +67,6 @@ module.exports = (course, moduleItem, callback) => {
          * Also, run the tests to see if action() or unpublishFile() should run. 
          ***************************************************************************/
 
-
-
-
         /* If the item is marked for deletion, do nothing */
         if (moduleItem.techops.delete === true) {
             callback(null, course, moduleItem);
@@ -82,8 +79,10 @@ module.exports = (course, moduleItem, callback) => {
             setting: false
         }];
 
+
         /* The test returns TRUE or FALSE - action() is called if true */
         var found = actionItems.find(item => item.reg.test(moduleItem.title));
+        
         if (/instructor\s*resources?/i.test(moduleItem.techops.parentModule.name)) {
             /* Module Items that are files must be unpublished in their own put requests */
             if (moduleItem.type === 'File') {
@@ -95,6 +94,12 @@ module.exports = (course, moduleItem, callback) => {
                 };
                 action();
             }
+        } else if (course.settings.platform === 'campus' && moduleItem.type === 'ExternalUrl') {
+            /* campus wants all external links published unless they're in instructor resources */
+            found = {
+                setting: true
+            };
+            action();
         } else if (found != undefined) {
             action();
         } else {
@@ -109,4 +114,4 @@ module.exports = (course, moduleItem, callback) => {
 
 module.exports.details = {
     title: 'module-items-publish-settings'
-}
+};

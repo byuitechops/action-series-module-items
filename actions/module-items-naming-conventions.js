@@ -189,6 +189,11 @@ module.exports = (course, item, callback) => {
             /(teaching|lesson)\s*notes/gi, // W[##] Teaching Notes  (Do NOT Publish)
             /notes\s*from\s*instructor/gi, // W[##] Notes from Instructor
             /^\s*introduction\s*-?\d*\s*$/gi, // W[##] Introduction
+            /student\s*feedback\*to\s*instructor/gi, // W[##] Student Feedback to Instructor
+            /student\s*evaluation\*of\s*instructor/gi, // W[##] Student Evaluation of Instructor
+            /end-of-course\s*evaluation/gi, // W[##] End-of-Course Evaluation
+            /end-of-semester\s*instructor\s*feedback/gi, // W[##] End-of-Course Evaluation
+            /mid-semester\s*instructor\s*feedback/gi, // W[##] Mid-Semester Instructor Feedback
         ];
 
         /* An array of module items NOT to change */
@@ -206,7 +211,7 @@ module.exports = (course, item, callback) => {
 
         /* Changes weeklyModule to TRUE if the item is in a weekly module */
         if (item.techops.parentModule !== undefined) {
-            weeklyModule = /(Week|Lesson|L|W)\s*(\d*(\D|$))/gi.test(item.techops.parentModule.name);
+            weeklyModule = /(Week|Lesson|L|W)\s*(\d+(\D|$))/gi.test(item.techops.parentModule.name);
         }
 
         /* if the item is a module item, call one function, else call another */
